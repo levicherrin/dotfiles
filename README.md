@@ -1,4 +1,4 @@
-# levicherrin / dotfiles
+# Levi's dotfiles
 
 Minimal, portable shell configuration for Debian (WSL2 and Linux) featuring an integrated Git prompt, enhanced aliases, and standard history controls.
 
