@@ -2,29 +2,91 @@
 
 Cross-platform declarative environment configuration for WSL2 Debian, native Debian GNU/Linux, and macOS, powered by Nix, Home Manager, and nix-darwin.
 
-## Quick Start
+---
 
-### Automated Setup (Nix & Home Manager)
+## Quick Start by Platform
 
-Clone the repository and run the bootstrap script:
+### 1. macOS Setup (Apple Silicon M-Series & Intel)
+
+On a fresh, out-of-the-box Mac:
+
+#### Step 1: Install Apple Command Line Tools (Provides Git)
+Open the stock Terminal app and run:
+```bash
+xcode-select --install
+```
+*(Click "Install" in the pop-up window and wait for completion).*
+
+#### Step 2: Set Default Shell to Bash
+macOS defaults to zsh. To set Bash as your default login shell:
+```bash
+chsh -s /bin/bash
+```
+
+#### Step 3: Clone & Bootstrap
+```bash
+git clone https://github.com/levicherrin/dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
+bash bootstrap.sh
+```
+
+**What `bootstrap.sh` provisions automatically on macOS:**
+* **Determinate Nix**: Installs the Nix package manager daemon.
+* **Nix-Darwin**: Applies macOS system defaults (Dark mode, auto-hide dock, fast key repeat, tap-to-click).
+* **Declarative Homebrew**: Bootstraps Homebrew and installs the **WezTerm** application into `/Applications/WezTerm.app`.
+* **CLI Suite via Nix**: Installs `neovim`, `tmux`, `ripgrep`, `fd`, `fzf`, `jq`, `lazygit`, `tree`, and `nerd-fonts.hack`.
+* **Shell & Prompt**: Configures Bash, Starship prompt, and live symlinks (`~/.config/nvim`, `~/.config/wezterm`, `~/.tmux.conf`).
+
+---
+
+### 2. Windows 11 & WSL2 Setup
+
+#### Step 1: Bootstrap Linux Environment (Inside WSL2 Debian)
+```bash
+git clone https://github.com/levicherrin/dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
+bash bootstrap.sh
+```
+
+#### Step 2: Windows Host Setup (One-Time in Windows PowerShell)
+Run these commands in Windows PowerShell to configure live WezTerm settings and developer fonts:
+
+```powershell
+# 1. Create live symbolic link to WezTerm configuration in WSL
+Remove-Item "$HOME\.config\wezterm\wezterm.lua" -Force -ErrorAction SilentlyContinue
+Remove-Item "$HOME\.wezterm.lua" -Force -ErrorAction SilentlyContinue
+New-Item -ItemType Directory -Path "$HOME\.config\wezterm" -Force
+New-Item -ItemType SymbolicLink -Path "$HOME\.config\wezterm\wezterm.lua" -Target "\\wsl.localhost\Debian\home\levi\repos\dotfiles\.config\wezterm\wezterm.lua" -Force
+
+# 2. Download, extract, and register Hack Nerd Font
+Invoke-WebRequest -Uri "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip" -OutFile "$env:TEMP\Hack.zip"
+Expand-Archive "$env:TEMP\Hack.zip" -DestinationPath "$env:TEMP\Hack" -Force
+New-Item -ItemType Directory -Path "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" -Force
+Copy-Item "$env:TEMP\Hack\*.ttf" "$env:LOCALAPPDATA\Microsoft\Windows\Fonts\" -Force
+Remove-Item "$env:TEMP\Hack.zip", "$env:TEMP\Hack" -Recurse -Force
+$fonts = Get-ChildItem "$env:LOCALAPPDATA\Microsoft\Windows\Fonts\Hack*.ttf"
+$regPath = "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Fonts"
+foreach ($f in $fonts) { New-ItemProperty -Path $regPath -Name $f.Name -Value $f.FullName -PropertyType String -Force }
+```
+
+---
+
+### 3. Native Debian GNU/Linux (Homelab / Server)
 
 ```bash
 git clone https://github.com/levicherrin/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
-./bootstrap.sh
+bash bootstrap.sh
 ```
 
-`bootstrap.sh` performs the following steps:
-1. Installs Determinate Nix if not already present.
-2. Symlinks the repository to `~/.dotfiles`.
-3. Verifies and personalizes the configured username in `flake.nix`.
-4. Runs the initial build (`home-manager switch` on Linux/WSL2, or `darwin-rebuild switch` on macOS).
+---
 
-### Daily Workflow
+## Daily Workflow
 
-To apply configuration edits:
+To apply any configuration edits after changing files in your repository:
 
 ```bash
+cd ~/.dotfiles
 ./rebuild.sh
 ```
 
@@ -44,7 +106,6 @@ To apply configuration edits:
 | `.config/wezterm/` | Cross-platform WezTerm configuration (Catppuccin Mocha, focus dimming, WSL auto-launch) |
 | `tests/` | Automated test suite (`lib.sh`, `validate.sh`) |
 
-
 ---
 
 ## WezTerm Configuration
@@ -52,57 +113,9 @@ To apply configuration edits:
 Located in `.config/wezterm/wezterm.lua`:
 
 * **Theme & Typography**: Catppuccin Mocha color scheme with Hack Nerd Font at 15.0pt.
-* **Focus Dimming**: Active window renders at 80% opacity, while unfocused windows automatically dim to 62% opacity with reduced text saturation.
-* **Window Ergonomics**: Single tab auto-hide and minimal resizable borders.
-* **Cross-Platform Auto-Launch**: On Windows hosts, automatically selects the `WSL:Debian` domain, defaults to `$HOME` (`~`), and enables Windows Acrylic blur. On macOS, enables native glassmorphism blur.
-
-### Windows Host Setup (One-Time Operator Setup)
-
-When running WezTerm on a Windows host accessing WSL2, perform the following one-time configuration steps from Windows PowerShell:
-
-#### 1. Live Configuration Symbolic Link
-
-```powershell
-# Remove any static copies
-Remove-Item "$HOME\.config\wezterm\wezterm.lua" -Force -ErrorAction SilentlyContinue
-Remove-Item "$HOME\.wezterm.lua" -Force -ErrorAction SilentlyContinue
-
-# Create directory and live symbolic link to repository in WSL
-New-Item -ItemType Directory -Path "$HOME\.config\wezterm" -Force
-New-Item -ItemType SymbolicLink -Path "$HOME\.config\wezterm\wezterm.lua" -Target "\\wsl.localhost\Debian\home\levi\repos\dotfiles\.config\wezterm\wezterm.lua" -Force
-```
-
-#### 2. Hack Nerd Font Installation & Registration
-
-```powershell
-# Download and extract Hack Nerd Font
-Invoke-WebRequest -Uri "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip" -OutFile "$env:TEMP\Hack.zip"
-Expand-Archive "$env:TEMP\Hack.zip" -DestinationPath "$env:TEMP\Hack" -Force
-
-# Copy TTF files to Windows user font directory
-New-Item -ItemType Directory -Path "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" -Force
-Copy-Item "$env:TEMP\Hack\*.ttf" "$env:LOCALAPPDATA\Microsoft\Windows\Fonts\" -Force
-Remove-Item "$env:TEMP\Hack.zip", "$env:TEMP\Hack" -Recurse -Force
-
-# Register font files in Windows registry
-$fonts = Get-ChildItem "$env:LOCALAPPDATA\Microsoft\Windows\Fonts\Hack*.ttf"
-$regPath = "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Fonts"
-foreach ($f in $fonts) { New-ItemProperty -Path $regPath -Name $f.Name -Value $f.FullName -PropertyType String -Force }
-```
-
-
-
-
----
-
-## Testing & Validation
-
-Run the automated validation suite to verify script syntax, symlink targets, and code quality before applying changes:
-
-```bash
-./tests/validate.sh
-```
-
+* **Contrast & Opacity**: 100% solid opacity for crisp text contrast.
+* **Window Ergonomics**: Draggable titlebar with standard window controls.
+* **Cross-Platform Auto-Launch**: On Windows hosts, automatically selects the `WSL:Debian` domain and defaults to `$HOME` (`~`). On macOS, enables native window settings.
 
 ---
 
@@ -130,8 +143,10 @@ A fast, modern Neovim setup managed by `lazy.nvim` and styled in **Catppuccin Mo
 
 ## Included Shortcuts and Highlights
 
-### File Listing and Navigation
+### Shell and Editor Shortcuts
 
+* `v` / `vi` / `vim` : Open modern Neovim (`nvim`)
+* `tree` : Detailed directory tree showing hidden files while ignoring `.git`
 * `ll` : Detailed list view (`ls -al --color=auto`)
 * `lt` : Sort files by last modified date (newest at bottom)
 * `lh` : Human-readable file sizes (KB, MB, GB)
@@ -153,3 +168,13 @@ A fast, modern Neovim setup managed by `lazy.nvim` and styled in **Catppuccin Mo
 * `path` : Print PATH variable on separate lines for readability
 * `myip` : Fetch public IP address via ipinfo.io
 * `reload` : Reload `~/.bashrc` instantly
+
+---
+
+## Testing & Validation
+
+Run the automated validation suite to verify script syntax, symlink targets, and code quality before applying changes:
+
+```bash
+./tests/validate.sh
+```
