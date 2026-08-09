@@ -8,6 +8,11 @@ case $- in
       *) return;;
 esac
 
+# Automatically switch from any Windows user folder to Linux $HOME on shell start
+if [[ "$PWD" == /mnt/c/Users/* ]]; then
+    cd ~
+fi
+
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
@@ -28,6 +33,13 @@ if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
+# Detect if running inside WSL (Windows Subsystem for Linux)
+if grep -qi microsoft /proc/version 2>/dev/null || [ -n "$WSL_DISTRO_NAME" ]; then
+    # WSL2 specific aliases & env vars
+    alias open='explorer.exe'
+    alias pbcopy='clip.exe'
+    alias pbpaste='powershell.exe -command Get-Clipboard'
+fi
 
 # ======================================================================
 # CUSTOM PROMPT & GIT INTEGRATION
@@ -71,3 +83,9 @@ fi
 
 # User specific environment and startup programs
 export PATH="$HOME/.local/bin:$PATH"
+export EDITOR="nvim"
+export VISUAL="nvim"
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/levi/.local/bin:$PATH"
