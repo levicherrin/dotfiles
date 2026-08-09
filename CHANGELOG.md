@@ -8,11 +8,12 @@ Integrated cross-platform Nix Flakes and Home Manager architecture supporting WS
 
 1. **Declarative Package & System Management**:
    * **`flake.nix`** - Defines unified inputs (nixpkgs, home-manager, nix-darwin, nix-homebrew), top-level unfree package handling, and multi-target outputs (`homeConfigurations.linux`, `homeConfigurations.linux-arm`, and `darwinConfigurations.mac`).
-   * **`home.nix`** - Universal user blueprint managing CLI tools (`ripgrep`, `fd`, `fzf`, `jq`, `lazygit`, `neovim`, `tree`, `tmux`, `nerd-fonts.hack`), shell aliases, Starship prompt, and live out-of-store symlinks.
+   * **`home.nix`** - Universal user blueprint managing CLI tools (`ripgrep`, `fd`, `fzf`, `jq`, `lazygit`, `neovim`, `tree`, `tmux`, `nerd-fonts.hack`), `home-manager` program installation, shell aliases, Starship prompt, and live out-of-store symlinks.
    * **`darwin.nix`** - macOS system settings, Dock/Finder defaults, and Homebrew cask declarations.
    * **`bootstrap.sh`** - OS-aware setup script that provisions Determinate Nix, safely preserves existing symlinks with `.pre-nix-backup` notifications, and builds the initial environment.
+   * **`rebuild.sh`** - Single command switch script with automated Nix environment discovery and fallback command resolution to reliably apply configuration updates across Linux and macOS.
 
-   * **`rebuild.sh`** - Single command switch script to apply configuration updates across Linux and macOS.
+
    * **`tests/lib.sh` & `tests/validate.sh`** - Automated test suite running static shell syntax checks, symlink integrity validation, code quality checks, and flake evaluations.
 
 ---

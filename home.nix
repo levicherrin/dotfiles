@@ -26,7 +26,11 @@ in
   home.sessionVariables.EDITOR = "nvim";
   home.sessionVariables.VISUAL = "nvim";
 
+  # Enable Home Manager CLI management
+  programs.home-manager.enable = true;
+
   # Bash Shell Configuration
+
   programs.bash = {
     enable = true;
     enableCompletion = true;
@@ -39,8 +43,9 @@ in
       "..." = "cd ../..";
       "...." = "cd ../../..";
       "....." = "cd ../../../..";
-      "-- -" = "cd -";
+      "-" = "cd -";
       ll = "ls -al --color=auto";
+
       lt = "ls -lha -rt --color=auto";
       lh = "ls -lh --color=auto";
       tree = "tree -C";
