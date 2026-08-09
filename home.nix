@@ -29,7 +29,13 @@ in
   # Enable Home Manager CLI management
   programs.home-manager.enable = true;
 
+  # Disable offline manual generation to silence warnings and speed up builds
+  manual.json.enable = false;
+  manual.html.enable = false;
+  manual.manpages.enable = false;
+
   # Bash Shell Configuration
+
 
   programs.bash = {
     enable = true;
@@ -48,9 +54,16 @@ in
 
       lt = "ls -lha -rt --color=auto";
       lh = "ls -lh --color=auto";
-      tree = "tree -C";
+      tree = "tree -a -C -I '.git'";
+
+      # Editor Shortcuts
+      v = "nvim";
+      vi = "nvim";
+      vim = "nvim";
+
 
       # Git Shortcuts
+
       gs = "git status";
       ga = "git add";
       gaa = "git add --all";
