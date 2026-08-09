@@ -58,14 +58,41 @@ Located in `.config/wezterm/wezterm.lua`:
 * **Window Ergonomics**: Single tab auto-hide and minimal resizable borders.
 * **Cross-Platform Auto-Launch**: On Windows hosts, automatically selects the `WSL:Debian` domain, defaults to `$HOME` (`~`), and enables Windows Acrylic blur. On macOS, enables native glassmorphism blur.
 
-### Windows Host Setup (One-Time)
+### Windows Host Setup (One-Time Operator Setup)
 
-When running WezTerm on a Windows host accessing WSL2, copy the configuration to your Windows user profile from PowerShell:
+When running WezTerm on a Windows host accessing WSL2, perform the following one-time configuration steps from Windows PowerShell:
+
+#### 1. Live Configuration Symbolic Link
 
 ```powershell
+# Remove any static copies
+Remove-Item "$HOME\.config\wezterm\wezterm.lua" -Force -ErrorAction SilentlyContinue
+Remove-Item "$HOME\.wezterm.lua" -Force -ErrorAction SilentlyContinue
+
+# Create directory and live symbolic link to repository in WSL
 New-Item -ItemType Directory -Path "$HOME\.config\wezterm" -Force
-Copy-Item "\\wsl.localhost\Debian\home\levi\repos\dotfiles\.config\wezterm\wezterm.lua" "$HOME\.config\wezterm\wezterm.lua"
+New-Item -ItemType SymbolicLink -Path "$HOME\.config\wezterm\wezterm.lua" -Target "\\wsl.localhost\Debian\home\levi\repos\dotfiles\.config\wezterm\wezterm.lua" -Force
 ```
+
+#### 2. Hack Nerd Font Installation & Registration
+
+```powershell
+# Download and extract Hack Nerd Font
+Invoke-WebRequest -Uri "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip" -OutFile "$env:TEMP\Hack.zip"
+Expand-Archive "$env:TEMP\Hack.zip" -DestinationPath "$env:TEMP\Hack" -Force
+
+# Copy TTF files to Windows user font directory
+New-Item -ItemType Directory -Path "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" -Force
+Copy-Item "$env:TEMP\Hack\*.ttf" "$env:LOCALAPPDATA\Microsoft\Windows\Fonts\" -Force
+Remove-Item "$env:TEMP\Hack.zip", "$env:TEMP\Hack" -Recurse -Force
+
+# Register font files in Windows registry
+$fonts = Get-ChildItem "$env:LOCALAPPDATA\Microsoft\Windows\Fonts\Hack*.ttf"
+$regPath = "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Fonts"
+foreach ($f in $fonts) { New-ItemProperty -Path $regPath -Name $f.Name -Value $f.FullName -PropertyType String -Force }
+```
+
+
 
 
 ---

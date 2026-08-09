@@ -16,6 +16,8 @@ Integrated cross-platform Nix Flakes and Home Manager architecture supporting WS
 
    * **`tests/lib.sh` & `tests/validate.sh`** - Automated test suite running static shell syntax checks, symlink integrity validation, code quality checks, and flake evaluations.
    * **`.config/wezterm/wezterm.lua`** - Cross-platform WezTerm configuration styled with Catppuccin Mocha, focus-dimming event listeners, and automated Windows/WSL2 domain and directory targeting.
+   * **`README.md`** - Documented one-time Windows host PowerShell setup for live symbolic linking and Hack Nerd Font installation with registry registration.
+
 
 
 ---

@@ -4,13 +4,20 @@ local config = wezterm.config_builder()
 
 -- Theming and Typography
 config.color_scheme = "Catppuccin Mocha"
-config.font = wezterm.font("Hack Nerd Font")
+config.font = wezterm.font_with_fallback({
+  "Hack Nerd Font",
+  "Cascadia Code",
+  "Consolas",
+})
 config.font_size = 15.0
 
+
 -- Window Styling and Ergonomics
+config.use_fancy_tab_bar = false
 config.window_background_opacity = 0.8
 config.hide_tab_bar_if_only_one_tab = true
 config.window_decorations = "RESIZE"
+
 
 -- Cross-Platform Blur and WSL2 Launch Configuration
 if wezterm.target_triple:find("darwin") then
