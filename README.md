@@ -43,9 +43,7 @@ To apply configuration edits:
 | `.config/nvim/` | Modular Neovim configuration (Catppuccin Mocha, snacks.nvim, oil.nvim, neogit) |
 | `.config/wezterm/` | Cross-platform WezTerm configuration (Catppuccin Mocha, focus dimming, WSL auto-launch) |
 | `tests/` | Automated test suite (`lib.sh`, `validate.sh`) |
-| `bashrc` | Standalone shell configuration |
-| `bash_aliases` | Standalone shell shortcuts and utilities |
-| `install.sh` | Legacy symlinking setup script for non-Nix environments |
+
 
 ---
 
