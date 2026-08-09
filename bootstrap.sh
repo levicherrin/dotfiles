@@ -30,16 +30,26 @@ if [ -n "$FLAKE_USER" ] && [ "$FLAKE_USER" != "$REAL_USER" ]; then
   rm -f "$DIR/flake.nix.bak"
 fi
 
+# Safely preserve any pre-existing shell symlinks before initial activation
+for f in "$HOME/.bashrc" "$HOME/.bash_aliases" "$HOME/.profile"; do
+  if [ -L "$f" ]; then
+    echo "    Found pre-existing symlink $f, backing up to ${f}.pre-nix-backup"
+    mv "$f" "${f}.pre-nix-backup"
+  fi
+done
+
 echo "==> [4/4] Applying initial configuration..."
 OS="$(uname -s)"
+
 if [ "$OS" = "Darwin" ]; then
   echo "    Detected macOS (Darwin). Running nix-darwin switch..."
   NIX_BIN="$(command -v nix)"
   sudo "$NIX_BIN" run github:nix-darwin/nix-darwin#darwin-rebuild -- switch --flake ~/.dotfiles#mac
 else
   echo "    Detected Linux (Debian/WSL2/Homelab). Running Home Manager switch..."
-  nix run github:nix-community/home-manager -- switch --flake ~/.dotfiles#linux
+  nix run github:nix-community/home-manager -- switch -b backup --flake ~/.dotfiles#linux
 fi
+
 
 echo ""
 echo "Bootstrap complete. Run './rebuild.sh' for future configuration changes."

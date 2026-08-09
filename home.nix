@@ -8,10 +8,8 @@ in
   home.homeDirectory = if isDarwin then "/Users/${user}" else "/home/${user}";
   home.stateVersion = "24.11";
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
   # Essential User Packages
+
   home.packages = with pkgs; [
     ripgrep          # Fast search (rg)
     fd               # Fast find (fd)

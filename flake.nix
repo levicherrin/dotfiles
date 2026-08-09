@@ -23,9 +23,16 @@
     let
       # Configured username - bootstrap.sh will auto-align this with your user
       user = "levi";
-      linuxPkgs = nixpkgs.legacyPackages.x86_64-linux;
-      linuxArmPkgs = nixpkgs.legacyPackages.aarch64-linux;
+      linuxPkgs = import nixpkgs {
+        system = "x86_64-linux";
+        config.allowUnfree = true;
+      };
+      linuxArmPkgs = import nixpkgs {
+        system = "aarch64-linux";
+        config.allowUnfree = true;
+      };
     in
+
     {
       # Standalone Home Manager for Linux & WSL2 (x86_64 and ARM)
       homeConfigurations = {
