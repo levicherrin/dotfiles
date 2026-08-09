@@ -118,6 +118,10 @@ in
   home.file.".config/nvim".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/.config/nvim";
 
+  home.file.".config/wezterm".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/.config/wezterm";
+
   home.file.".tmux.conf".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/tmux.conf";
 }
+

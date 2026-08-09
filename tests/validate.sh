@@ -31,12 +31,15 @@ test_forbidden_characters() {
 test_symlink_targets() {
   assert_file_exists "$ROOT/.config/nvim" "Neovim configuration directory missing"
   assert_file_exists "$ROOT/.config/nvim/init.lua" "Neovim init.lua entry point missing"
+  assert_file_exists "$ROOT/.config/wezterm" "WezTerm configuration directory missing"
+  assert_file_exists "$ROOT/.config/wezterm/wezterm.lua" "WezTerm wezterm.lua entry point missing"
   assert_file_exists "$ROOT/tmux.conf" "tmux.conf missing"
   assert_file_exists "$ROOT/flake.nix" "flake.nix missing"
   assert_file_exists "$ROOT/home.nix" "home.nix missing"
   assert_file_exists "$ROOT/bootstrap.sh" "bootstrap.sh missing"
   assert_file_exists "$ROOT/rebuild.sh" "rebuild.sh missing"
   pass "All declared symlink targets and core files exist"
+
 }
 
 # 4. Nix Flake Validation (when Nix binary is available)

@@ -41,10 +41,32 @@ To apply configuration edits:
 | `rebuild.sh` | Script to apply configuration changes |
 | `tmux.conf` | Terminal multiplexer configuration (mouse scrolling, 50k buffer, vi mode) |
 | `.config/nvim/` | Modular Neovim configuration (Catppuccin Mocha, snacks.nvim, oil.nvim, neogit) |
+| `.config/wezterm/` | Cross-platform WezTerm configuration (Catppuccin Mocha, focus dimming, WSL auto-launch) |
 | `tests/` | Automated test suite (`lib.sh`, `validate.sh`) |
 | `bashrc` | Standalone shell configuration |
 | `bash_aliases` | Standalone shell shortcuts and utilities |
 | `install.sh` | Legacy symlinking setup script for non-Nix environments |
+
+---
+
+## WezTerm Configuration
+
+Located in `.config/wezterm/wezterm.lua`:
+
+* **Theme & Typography**: Catppuccin Mocha color scheme with Hack Nerd Font at 15.0pt.
+* **Focus Dimming**: Active window renders at 80% opacity, while unfocused windows automatically dim to 62% opacity with reduced text saturation.
+* **Window Ergonomics**: Single tab auto-hide and minimal resizable borders.
+* **Cross-Platform Auto-Launch**: On Windows hosts, automatically selects the `WSL:Debian` domain, defaults to `$HOME` (`~`), and enables Windows Acrylic blur. On macOS, enables native glassmorphism blur.
+
+### Windows Host Setup (One-Time)
+
+When running WezTerm on a Windows host accessing WSL2, copy the configuration to your Windows user profile from PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Path "$HOME\.config\wezterm" -Force
+Copy-Item "\\wsl.localhost\Debian\home\levi\repos\dotfiles\.config\wezterm\wezterm.lua" "$HOME\.config\wezterm\wezterm.lua"
+```
+
 
 ---
 
