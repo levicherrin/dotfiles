@@ -50,8 +50,9 @@ test_symlink_targets() {
 # 4. Nix Flake Validation (when Nix binary is available)
 test_nix_flake() {
   if command -v nix >/dev/null 2>&1; then
-    nix flake check --no-build "$ROOT" || fail "nix flake check failed"
+    nix flake check --impure --no-build "$ROOT" || fail "nix flake check failed"
     pass "Nix flake syntax and outputs verified"
+
   else
     pass "Nix not yet installed (skipped live flake evaluation; syntax checked statically)"
   fi

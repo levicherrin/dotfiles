@@ -13,16 +13,14 @@
       url = "github:nix-darwin/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    nix-homebrew = {
-      url = "github:zhaofengli/nix-homebrew";
-    };
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, nix-darwin, nix-homebrew }:
+  outputs = inputs@{ self, nixpkgs, home-manager, nix-darwin }:
     let
-      # Configured username - bootstrap.sh will auto-align this with your user
-      user = "levi";
+      # Dynamically discover active user from environment, with sensible fallback
+      envUser = builtins.getEnv "USER";
+      user = if envUser != "" then envUser else "levi";
+
       linuxPkgs = import nixpkgs {
         system = "x86_64-linux";
         config.allowUnfree = true;
@@ -67,7 +65,6 @@
           specialArgs = { inherit user inputs; isDarwin = true; };
           modules = [
             ./darwin.nix
-            nix-homebrew.darwinModules.nix-homebrew
             home-manager.darwinModules.home-manager
             {
               home-manager.useGlobalPkgs = true;

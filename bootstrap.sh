@@ -21,14 +21,9 @@ fi
 echo "==> [2/4] Symlinking this repository to ~/.dotfiles..."
 ln -sfn "$DIR" ~/.dotfiles
 
-echo "==> [3/4] Personalizing username..."
+echo "==> [3/4] Personalizing environment..."
 REAL_USER="$(whoami)"
-FLAKE_USER="$(sed -nE 's/^[[:space:]]*user = "([^"]+)";.*/\1/p' "$DIR/flake.nix" | head -n1)"
-if [ -n "$FLAKE_USER" ] && [ "$FLAKE_USER" != "$REAL_USER" ]; then
-  echo "    Updating flake.nix user from \"$FLAKE_USER\" to \"$REAL_USER\"..."
-  sed -i.bak -E "s/^([[:space:]]*user = \")[^\"]+(\";.*)/\1${REAL_USER}\2/" "$DIR/flake.nix"
-  rm -f "$DIR/flake.nix.bak"
-fi
+echo "    Target user: $REAL_USER (dynamically resolved)"
 
 # Safely preserve any pre-existing shell symlinks before initial activation
 for f in "$HOME/.bashrc" "$HOME/.bash_aliases" "$HOME/.profile"; do
@@ -44,12 +39,11 @@ OS="$(uname -s)"
 if [ "$OS" = "Darwin" ]; then
   echo "    Detected macOS (Darwin). Running nix-darwin switch..."
   NIX_BIN="$(command -v nix)"
-  sudo "$NIX_BIN" run github:nix-darwin/nix-darwin#darwin-rebuild -- switch --flake ~/.dotfiles#mac
+  sudo -H USER="$REAL_USER" "$NIX_BIN" run github:nix-darwin/nix-darwin#darwin-rebuild -- switch --impure --flake "${DIR}#mac"
 else
   echo "    Detected Linux (Debian/WSL2/Homelab). Running Home Manager switch..."
-  nix run github:nix-community/home-manager -- switch -b backup --flake ~/.dotfiles#linux
+  nix run github:nix-community/home-manager -- switch -b backup --impure --flake ~/.dotfiles#linux
 fi
-
 
 echo ""
 echo "Bootstrap complete. Run './rebuild.sh' for future configuration changes."

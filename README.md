@@ -33,9 +33,10 @@ bash bootstrap.sh
 **What `bootstrap.sh` provisions automatically on macOS:**
 * **Determinate Nix**: Installs the Nix package manager daemon.
 * **Nix-Darwin**: Applies macOS system defaults (Dark mode, auto-hide dock, fast key repeat, tap-to-click).
-* **Declarative Homebrew**: Bootstraps Homebrew and installs the **WezTerm** application into `/Applications/WezTerm.app`.
+* **WezTerm Application**: Installs WezTerm directly via Nix into `/Applications/Nix Apps/WezTerm.app`.
 * **CLI Suite via Nix**: Installs `neovim`, `tmux`, `ripgrep`, `fd`, `fzf`, `jq`, `lazygit`, `tree`, and `nerd-fonts.hack`.
 * **Shell & Prompt**: Configures Bash, Starship prompt, and live symlinks (`~/.config/nvim`, `~/.config/wezterm`, `~/.tmux.conf`).
+
 
 ---
 
@@ -98,7 +99,8 @@ cd ~/.dotfiles
 | :---- | :---- |
 | `flake.nix` | Flake entry point declaring Linux and macOS configurations |
 | `home.nix` | Universal user environment (CLI tools, Starship prompt, shell, symlinks) |
-| `darwin.nix` | macOS system defaults, Dock/Finder settings, and Homebrew integration |
+| `darwin.nix` | macOS system defaults, Dock/Finder settings, and system packages |
+
 | `bootstrap.sh` | Automated bootstrap script for fresh machines |
 | `rebuild.sh` | Script to apply configuration changes |
 | `tmux.conf` | Terminal multiplexer configuration (mouse scrolling, 50k buffer, vi mode) |

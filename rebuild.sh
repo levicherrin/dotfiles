@@ -14,18 +14,20 @@ if ! command -v nix >/dev/null 2>&1; then
 fi
 
 OS="$(uname -s)"
+REAL_USER="$(whoami)"
 
 if [ "$OS" = "Darwin" ]; then
+  FLAKE_PATH="${HOME}/.dotfiles"
   if command -v darwin-rebuild >/dev/null 2>&1; then
-    darwin-rebuild switch --flake ~/.dotfiles#mac
+    sudo -H USER="$REAL_USER" darwin-rebuild switch --impure --flake "${FLAKE_PATH}#mac"
   else
     NIX_BIN="$(command -v nix)"
-    sudo "$NIX_BIN" run github:nix-darwin/nix-darwin#darwin-rebuild -- switch --flake ~/.dotfiles#mac
+    sudo -H USER="$REAL_USER" "$NIX_BIN" run github:nix-darwin/nix-darwin#darwin-rebuild -- switch --impure --flake "${FLAKE_PATH}#mac"
   fi
 else
   if command -v home-manager >/dev/null 2>&1; then
-    home-manager switch --flake ~/.dotfiles#linux
+    home-manager switch --impure --flake ~/.dotfiles#linux
   else
-    nix run github:nix-community/home-manager -- switch --flake ~/.dotfiles#linux
+    nix run github:nix-community/home-manager -- switch --impure --flake ~/.dotfiles#linux
   fi
 fi

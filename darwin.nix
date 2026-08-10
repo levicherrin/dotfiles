@@ -1,11 +1,16 @@
-{ user, ... }:
+{ pkgs, user, ... }:
 
 {
   # Determinate manages the Nix daemon
   nix.enable = false;
 
   nixpkgs.config.allowUnfree = true;
-  nixpkgs.hostPlatform = "aarch64-darwin"; # use x86_64-darwin for Intel Mac
+  nixpkgs.hostPlatform = "aarch64-darwin";
+
+  # Install GUI applications and system tools directly via Nix
+  environment.systemPackages = [
+    pkgs.wezterm
+  ];
 
   system.primaryUser = user;
   users.users.${user} = {
@@ -24,17 +29,5 @@
     finder.FXPreferredViewStyle = "Nlsv";  # List view by default
     finder.CreateDesktop = false;          # Clean desktop
     trackpad.Clicking = true;              # Tap to click
-  };
-  nix-homebrew = {
-    enable = true;
-    inherit user;
-  };
-  homebrew = {
-    enable = true;
-    onActivation.cleanup = "none";
-    onActivation.autoUpdate = true;
-    casks = [
-      "wezterm"
-    ];
   };
 }
