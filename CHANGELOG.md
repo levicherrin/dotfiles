@@ -21,7 +21,9 @@ Integrated cross-platform Nix Flakes and Home Manager architecture supporting WS
    * **`tests/lib.sh` & `tests/validate.sh`** - Automated test suite running static shell syntax checks, symlink integrity validation, code quality checks, and flake evaluations.
    * **`.config/wezterm/wezterm.lua`** - Cross-platform WezTerm configuration styled with Catppuccin Mocha, focus-dimming event listeners, and automated Windows/WSL2 domain and directory targeting.
    * **`AGENTS.md`** - Universal AI agent policy defining style rules, operator autonomy balance, and engineering excellence standards, declaratively fanned out to Google Antigravity (`~/.gemini/config/rules/AGENTS.md`), AWS Kiro (`~/.kiro/AGENTS.md`), and standard fallback paths.
+   * **`VOICE.md` & `OPINIONS.md`** - Codified communication persona (direct, technical, cliché-free) and engineering heuristics (boring technology, minimal dependencies, mandatory bug reproduction) fanned out across all agent harnesses.
    * **`README.md`** - Documented one-time Windows host PowerShell setup for live symbolic linking and Hack Nerd Font installation with registry registration.
+
 
 
 

@@ -39,7 +39,10 @@ test_symlink_targets() {
   assert_file_exists "$ROOT/bootstrap.sh" "bootstrap.sh missing"
   assert_file_exists "$ROOT/rebuild.sh" "rebuild.sh missing"
   assert_file_exists "$ROOT/AGENTS.md" "AGENTS.md universal policy missing"
+  assert_file_exists "$ROOT/VOICE.md" "VOICE.md communication guide missing"
+  assert_file_exists "$ROOT/OPINIONS.md" "OPINIONS.md engineering heuristics missing"
   pass "All declared symlink targets and core files exist"
+
 
 
 }

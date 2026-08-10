@@ -105,21 +105,20 @@ cd ~/.dotfiles
 | `.config/nvim/` | Modular Neovim configuration (Catppuccin Mocha, snacks.nvim, oil.nvim, neogit) |
 | `.config/wezterm/` | Cross-platform WezTerm configuration (Catppuccin Mocha, focus dimming, WSL auto-launch) |
 | `AGENTS.md` | Universal AI agent policy and engineering baseline |
+| `VOICE.md` | Writing style guide and persona for agent communication |
+| `OPINIONS.md` | Technical opinions and architectural heuristics |
 | `tests/` | Automated test suite (`lib.sh`, `validate.sh`) |
 
 ---
 
-## Universal AI Agent Policy
+## Universal AI Agent Layer
 
-Located in `AGENTS.md` and declaratively fanned out via `home.nix` to:
-* **Google Antigravity**: `~/.gemini/config/rules/AGENTS.md`
-* **AWS Kiro**: `~/.kiro/AGENTS.md`
-* **Standard Fallback**: `~/.config/AGENTS.md`
+Declaratively fanned out via `home.nix` to **Google Antigravity** (`~/.gemini/config/rules/`), **AWS Kiro** (`~/.kiro/`), and standard fallback paths (`~/.config/`):
 
-### Core Policy Highlights
-* **Style & Formatting**: Zero emojis, zero unicode em dashes (use ASCII `-`), no AI co-author tag pollution in Git commits, concise and direct technical communication.
-* **Operator Alignment**: Discuss architectural pivots and destructive changes upfront; execute autonomously and thoroughly on established tasks and goals.
-* **Engineering Standards**: Mandatory end-to-end bug reproduction before fixing; obsession with visual polish, pixel perfection, and zero test/lint flakiness.
+* **`AGENTS.md` (Core Policy)**: Universal formatting rules (zero emojis, zero unicode em dashes, no AI co-author tag pollution), operator autonomy balance, and engineering excellence standards.
+* **`VOICE.md` (Communication Style)**: Writing tone, active voice, short paragraphs, and banned generic AI clichés ("delve", "tapestry", "game-changer", "leverage").
+* **`OPINIONS.md` (Architectural Heuristics)**: Technical preferences (simplicity over speculative abstractions, boring technology, minimal dependencies, and mandatory end-to-end bug reproduction).
+
 
 
 ---

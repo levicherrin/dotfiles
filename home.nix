@@ -140,12 +140,25 @@ in
   # Universal AI Agent Policy Fan-out
   home.file.".gemini/config/rules/AGENTS.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AGENTS.md";
+  home.file.".gemini/config/rules/VOICE.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/VOICE.md";
+  home.file.".gemini/config/rules/OPINIONS.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/OPINIONS.md";
 
   home.file.".kiro/AGENTS.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AGENTS.md";
+  home.file.".kiro/VOICE.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/VOICE.md";
+  home.file.".kiro/OPINIONS.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/OPINIONS.md";
 
   home.file.".config/AGENTS.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AGENTS.md";
+  home.file.".config/VOICE.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/VOICE.md";
+  home.file.".config/OPINIONS.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/OPINIONS.md";
 }
+
 
 
