@@ -113,7 +113,8 @@ cd ~/.dotfiles
 
 ## Universal AI Agent Layer
 
-Declaratively fanned out via `home.nix` to **Google Antigravity** (`~/.gemini/config/rules/`), **AWS Kiro** (`~/.kiro/`), and standard fallback paths (`~/.config/`):
+Declaratively fanned out via `home.nix` to **Google Antigravity** (`~/.gemini/config/rules/`), **AWS Kiro** (`~/.kiro/steering/`), and standard fallback paths (`~/.config/`):
+
 
 * **`AGENTS.md` (Core Policy)**: Universal formatting rules (zero emojis, zero unicode em dashes, no AI co-author tag pollution), operator autonomy balance, and engineering excellence standards.
 * **`VOICE.md` (Communication Style)**: Writing tone, active voice, short paragraphs, and banned generic AI clichés ("delve", "tapestry", "game-changer", "leverage").

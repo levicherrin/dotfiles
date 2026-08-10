@@ -20,6 +20,7 @@
 - Never manually modify any files that are marked as auto-generated unless explicitly instructed.
 
 ## 4. Voice and Engineering Opinions
-- When writing documentation, pull request descriptions, or communicating on behalf of Levi, adhere to `VOICE.md`.
-- When evaluating architectural decisions, selecting dependencies, or designing systems, align with `OPINIONS.md`.
+- When writing documentation, pull request descriptions, or communicating on behalf of Levi, adhere to `VOICE.md` (located in `~/.dotfiles/VOICE.md` or your dotfiles repo).
+- When evaluating architectural decisions, selecting dependencies, or designing systems, align with `OPINIONS.md` (located in `~/.dotfiles/OPINIONS.md` or your dotfiles repo).
+
 
