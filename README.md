@@ -17,18 +17,13 @@ xcode-select --install
 ```
 *(Click "Install" in the pop-up window and wait for completion).*
 
-#### Step 2: Set Default Shell to Bash
-macOS defaults to zsh. To set Bash as your default login shell:
-```bash
-chsh -s /bin/bash
-```
-
-#### Step 3: Clone & Bootstrap
+#### Step 2: Clone & Bootstrap
 ```bash
 git clone https://github.com/levicherrin/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 bash bootstrap.sh
 ```
+
 
 **What `bootstrap.sh` provisions automatically on macOS:**
 * **Determinate Nix**: Installs the Nix package manager daemon.

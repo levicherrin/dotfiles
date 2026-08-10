@@ -25,6 +25,8 @@ in
   fonts.fontconfig.enable = true;
   home.sessionVariables.EDITOR = "nvim";
   home.sessionVariables.VISUAL = "nvim";
+  home.sessionVariables.BASH_SILENCE_DEPRECATION_WARNING = "1";
+
 
   # Enable Home Manager CLI management
   programs.home-manager.enable = true;

@@ -7,14 +7,20 @@
   nixpkgs.config.allowUnfree = true;
   nixpkgs.hostPlatform = "aarch64-darwin";
 
+  # Enable modern Bash managed by nix-darwin in /etc/shells
+  programs.bash.enable = true;
+  environment.shells = [ pkgs.bashInteractive ];
+
   # Install GUI applications and system tools directly via Nix
   environment.systemPackages = [
     pkgs.wezterm
+    pkgs.bashInteractive
   ];
 
   system.primaryUser = user;
   users.users.${user} = {
     home = "/Users/${user}";
+    shell = pkgs.bashInteractive;
   };
   system.stateVersion = 6;
   system.defaults = {

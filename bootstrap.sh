@@ -40,7 +40,15 @@ if [ "$OS" = "Darwin" ]; then
   echo "    Detected macOS (Darwin). Running nix-darwin switch..."
   NIX_BIN="$(command -v nix)"
   sudo -H USER="$REAL_USER" "$NIX_BIN" run github:nix-darwin/nix-darwin#darwin-rebuild -- switch --impure --flake "${DIR}#mac"
+
+  # Ensure user login shell is switched to modern Nix Bash
+  NIX_BASH="/run/current-system/sw/bin/bash"
+  if [ -x "$NIX_BASH" ] && [ "${SHELL:-}" != "$NIX_BASH" ]; then
+    echo "    Configuring modern Bash as default login shell..."
+    sudo chsh -s "$NIX_BASH" "$REAL_USER" 2>/dev/null || chsh -s "$NIX_BASH" 2>/dev/null || true
+  fi
 else
+
   echo "    Detected Linux (Debian/WSL2/Homelab). Running Home Manager switch..."
   nix run github:nix-community/home-manager -- switch -b backup --impure --flake ~/.dotfiles#linux
 fi
