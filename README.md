@@ -104,7 +104,23 @@ cd ~/.dotfiles
 | `tmux.conf` | Terminal multiplexer configuration (mouse scrolling, 50k buffer, vi mode) |
 | `.config/nvim/` | Modular Neovim configuration (Catppuccin Mocha, snacks.nvim, oil.nvim, neogit) |
 | `.config/wezterm/` | Cross-platform WezTerm configuration (Catppuccin Mocha, focus dimming, WSL auto-launch) |
+| `AGENTS.md` | Universal AI agent policy and engineering baseline |
 | `tests/` | Automated test suite (`lib.sh`, `validate.sh`) |
+
+---
+
+## Universal AI Agent Policy
+
+Located in `AGENTS.md` and declaratively fanned out via `home.nix` to:
+* **Google Antigravity**: `~/.gemini/config/rules/AGENTS.md`
+* **AWS Kiro**: `~/.kiro/AGENTS.md`
+* **Standard Fallback**: `~/.config/AGENTS.md`
+
+### Core Policy Highlights
+* **Style & Formatting**: Zero emojis, zero unicode em dashes (use ASCII `-`), no AI co-author tag pollution in Git commits, concise and direct technical communication.
+* **Operator Alignment**: Discuss architectural pivots and destructive changes upfront; execute autonomously and thoroughly on established tasks and goals.
+* **Engineering Standards**: Mandatory end-to-end bug reproduction before fixing; obsession with visual polish, pixel perfection, and zero test/lint flakiness.
+
 
 ---
 

@@ -38,7 +38,9 @@ test_symlink_targets() {
   assert_file_exists "$ROOT/home.nix" "home.nix missing"
   assert_file_exists "$ROOT/bootstrap.sh" "bootstrap.sh missing"
   assert_file_exists "$ROOT/rebuild.sh" "rebuild.sh missing"
+  assert_file_exists "$ROOT/AGENTS.md" "AGENTS.md universal policy missing"
   pass "All declared symlink targets and core files exist"
+
 
 }
 

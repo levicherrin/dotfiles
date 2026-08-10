@@ -136,5 +136,16 @@ in
 
   home.file.".tmux.conf".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/tmux.conf";
+
+  # Universal AI Agent Policy Fan-out
+  home.file.".gemini/config/rules/AGENTS.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AGENTS.md";
+
+  home.file.".kiro/AGENTS.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AGENTS.md";
+
+  home.file.".config/AGENTS.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AGENTS.md";
 }
+
 
