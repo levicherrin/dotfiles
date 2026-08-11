@@ -30,7 +30,12 @@ bash bootstrap.sh
 * **Nix-Darwin**: Applies macOS system defaults (Dark mode, auto-hide dock, fast key repeat, tap-to-click).
 * **WezTerm Application**: Installs WezTerm directly via Nix into `/Applications/Nix Apps/WezTerm.app`.
 * **CLI Suite via Nix**: Installs `neovim`, `tmux`, `ripgrep`, `fd`, `fzf`, `jq`, `lazygit`, `tree`, and `nerd-fonts.hack`.
-* **Shell & Prompt**: Configures Bash, Starship prompt, and live symlinks (`~/.config/nvim`, `~/.config/wezterm`, `~/.tmux.conf`).
+* **Shell & Prompt**: Configures modern Bash 5, Starship prompt, and live symlinks (`~/.config/nvim`, `~/.config/wezterm`, `~/.tmux.conf`).
+
+> [!TIP]
+> **VS Code & Kiro IDE Terminal Configuration**:
+> If your editor `settings.json` has a hardcoded path for Bash (such as `"/bin/bash"`), update it to `"path": "bash"` under your terminal profile settings. This ensures the integrated terminal resolves your active Nix Bash environment from `PATH`.
+
 
 
 ---
