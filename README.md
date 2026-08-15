@@ -109,6 +109,7 @@ cd ~/.dotfiles
 | `AGENTS.md` | Universal AI agent policy and engineering baseline |
 | `VOICE.md` | Writing style guide and persona for agent communication |
 | `OPINIONS.md` | Technical opinions and architectural heuristics |
+| `GHES_WORKFLOW.md` | GitHub Enterprise Server workflow, Projects v2, and templates |
 | `tests/` | Automated test suite (`lib.sh`, `validate.sh`) |
 
 ---
@@ -117,10 +118,11 @@ cd ~/.dotfiles
 
 Declaratively fanned out via `home.nix` to **Google Antigravity** (`~/.gemini/config/rules/`), **AWS Kiro** (`~/.kiro/steering/`), and standard fallback paths (`~/.config/`):
 
-
 * **`AGENTS.md` (Core Policy)**: Universal formatting rules (zero emojis, zero unicode em dashes, no AI co-author tag pollution), operator autonomy balance, and engineering excellence standards.
 * **`VOICE.md` (Communication Style)**: Writing tone, active voice, short paragraphs, and banned generic AI clichés ("delve", "tapestry", "game-changer", "leverage").
 * **`OPINIONS.md` (Architectural Heuristics)**: Technical preferences (simplicity over speculative abstractions, boring technology, minimal dependencies, and mandatory end-to-end bug reproduction).
+* **`GHES_WORKFLOW.md` (Corporate GHES & Projects v2)**: Lifecycle state machine (`Backlog` -> `In Progress` -> `In Review` -> `Done`), branch standard (`<type>/<short-description>`), writing templates for issues/daily comments/PRs, and scoped PAT security rules.
+
 
 
 

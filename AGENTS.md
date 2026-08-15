@@ -22,5 +22,7 @@
 ## 4. Voice and Engineering Opinions
 - When writing documentation, pull request descriptions, or communicating on behalf of Levi, adhere to `VOICE.md` (located in `~/.dotfiles/VOICE.md` or your dotfiles repo).
 - When evaluating architectural decisions, selecting dependencies, or designing systems, align with `OPINIONS.md` (located in `~/.dotfiles/OPINIONS.md` or your dotfiles repo).
+- When creating issues, managing project boards, posting daily updates, or creating pull requests on GitHub (cloud or enterprise), adhere to `GITHUB_WORKFLOW.md` (located in `~/.dotfiles/GITHUB_WORKFLOW.md` or your dotfiles repo).
+
 
 

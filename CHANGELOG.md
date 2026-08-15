@@ -19,10 +19,12 @@ Integrated cross-platform Nix Flakes and Home Manager architecture supporting WS
 
    * **`tests/lib.sh` & `tests/validate.sh`** - Automated test suite running static shell syntax checks, symlink integrity validation, code quality checks, and flake evaluations.
    * **`.config/wezterm/wezterm.lua`** - Cross-platform WezTerm configuration styled with Catppuccin Mocha, focus-dimming event listeners, and automated Windows/WSL2 domain and directory targeting.
-   * **`AGENTS.md`** - Universal AI agent policy defining style rules, operator autonomy balance, and engineering excellence standards, declaratively fanned out to Google Antigravity (`~/.gemini/config/rules/AGENTS.md`), AWS Kiro (`~/.kiro/steering/AGENTS.md`), and standard fallback paths.
-
-   * **`VOICE.md` & `OPINIONS.md`** - Codified communication persona (direct, technical, cliché-free) and engineering heuristics (boring technology, minimal dependencies, mandatory bug reproduction) fanned out across all agent harnesses.
+   * **`AGENTS.md` Hub & Single Fan-Out** - Universal AI agent policy defining style rules, operator autonomy balance, and engineering excellence standards, declaratively fanned out as the sole entry point to Google Antigravity (`~/.gemini/config/rules/AGENTS.md`), AWS Kiro (`~/.kiro/steering/AGENTS.md`), and fallback paths (`~/.config/AGENTS.md`).
+   * **Centralized Guidelines (`VOICE.md`, `OPINIONS.md`, `GITHUB_WORKFLOW.md`)** - Maintained at `~/.dotfiles` as the single source of truth and referenced by `AGENTS.md` on demand, keeping harness configuration directories clean.
+   * **Unified GitHub Workflow (`GITHUB_WORKFLOW.md`)** - Standardized issue tracking on GitHub Projects v2, daily status updates, writing templates, security PAT scoping, and `gh` CLI / MCP integration across both GitHub.com and GitHub Enterprise Server.
+   * **`gh` CLI & MCP Integration** - Added `pkgs.gh` to universal packages and documented GitHub MCP configuration.
    * **`README.md`** - Documented one-time Windows host PowerShell setup for live symbolic linking and Hack Nerd Font installation with registry registration.
+
 
 
 

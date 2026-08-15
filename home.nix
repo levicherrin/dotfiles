@@ -19,8 +19,10 @@ in
     neovim           # Modern Lua-based editor
     tree             # Directory tree visualizer
     tmux             # Terminal multiplexer
+    gh               # GitHub CLI
     nerd-fonts.hack  # Terminal icon glyphs
   ];
+
 
   fonts.fontconfig.enable = true;
   home.sessionVariables.EDITOR = "nvim";
@@ -139,7 +141,7 @@ in
   home.file.".tmux.conf".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/tmux.conf";
 
-  # Universal AI Agent Policy Fan-out
+  # Universal AI Agent Policy Fan-out (Antigravity & Kiro)
   home.file.".gemini/config/rules/AGENTS.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AGENTS.md";
 
@@ -149,6 +151,7 @@ in
   home.file.".config/AGENTS.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AGENTS.md";
 }
+
 
 
 
