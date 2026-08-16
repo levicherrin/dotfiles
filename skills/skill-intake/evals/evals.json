@@ -1,0 +1,16 @@
+{
+  "skill_name": "skill-intake",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Evaluate, sanitize, and adapt the upstream skill provided in the input directory. Ensure it aligns with our local GITHUB_WORKFLOW.md standards.",
+      "expected_output": "A sanitized and adapted skill that incorporates the GITHUB_WORKFLOW.md requirements and is free of emojis or em dashes.",
+      "files": ["input/github-issues/SKILL.md"],
+      "assertions": [
+        "The SKILL.md file is under 500 lines in length.",
+        "The output references GITHUB_WORKFLOW.md standards.",
+        "The files do not contain any unicode em dashes."
+      ]
+    }
+  ]
+}

@@ -150,6 +150,13 @@ in
 
   home.file.".config/AGENTS.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AGENTS.md";
+
+  # Agent Skills Fan-out (Antigravity CLI & Kiro)
+  home.file.".gemini/antigravity-cli/skills".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/skills";
+
+  home.file.".kiro/skills".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/skills";
 }
 
 

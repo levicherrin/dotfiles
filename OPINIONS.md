@@ -12,7 +12,13 @@ When evaluating technical architectures, selecting tools, or designing software 
 
 ---
 
-## 2. Dependencies & Code Ownership
+## 2. Agent Skill Architecture (Execution vs. Policy)
+* **Separation of Concerns**: Agent skills (`skills/`) exist strictly as procedural runbooks (the "How": CLI commands, APIs, tool usage). Organizational governance (the "Why" and "What": templates, labels, state machines) must live centrally in `~/.dotfiles/` (e.g., `GITHUB_WORKFLOW.md`).
+* **Lightweight Upstream Patches**: Do not deeply customize or rewrite open-source skills to fit our organization. Instead, lightly patch them by sanitizing formatting (e.g., removing emojis/em dashes), stripping conflicting hardcoded rules, and injecting pointers to our centralized `.dotfiles` policies.
+
+---
+
+## 3. Dependencies & Code Ownership
 * **Minimal Dependency Footprint**: Prefer writing 20 lines of clean, readable code you own rather than pulling in large external libraries for trivial utility functions.
 * **Standard Library First**: Utilize the language runtime's built-in capabilities before looking for third-party packages.
 * **Explicit Over Implicit**: Favor clear, explicit code flow over "magic", metaprogramming, or deeply nested abstractions.

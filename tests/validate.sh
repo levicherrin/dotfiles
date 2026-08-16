@@ -42,6 +42,7 @@ test_symlink_targets() {
   assert_file_exists "$ROOT/VOICE.md" "VOICE.md communication guide missing"
   assert_file_exists "$ROOT/OPINIONS.md" "OPINIONS.md engineering heuristics missing"
   assert_file_exists "$ROOT/GITHUB_WORKFLOW.md" "GITHUB_WORKFLOW.md guide missing"
+  assert_file_exists "$ROOT/skills" "Skills directory missing"
   pass "All declared symlink targets and core files exist"
 
 

@@ -1,0 +1,11 @@
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Skill evaluation workspaces and scratch outputs
+*-workspace/
+
+# Nix build outputs
+result
+.pre-nix-backup/
