@@ -10,10 +10,11 @@ A skill for evaluating, ingesting, sanitizing, and adapting upstream open-source
 The process has two tracks depending on the origin of the skill:
 
 Lightweight Track (for open-source/upstream skills):
-- Evaluate whether the upstream skill is worth adopting
+- Evaluate whether the upstream skill is worth adopting (Step 0)
+- Policy Audit: Identify opinionated conventions (templates, labels, workflows) and check ~/.dotfiles/ governance
+- If a policy gap exists, confirm standards with the operator and codify them in ~/.dotfiles/ policy
 - Sanitize to meet local conventions (strip emojis and em dashes)
-- Patch the skill to delete conflicting hardcoded policies
-- Insert pointers tying the skill to our centralized dotfiles governance
+- Patch the skill to strip hardcoded opinion blocks and insert pointers tying the runbook to dotfiles policy
 - Wire the skill into the harness
 
 Heavy Track (for defining new custom skills from scratch):

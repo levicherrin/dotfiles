@@ -28,7 +28,37 @@ All feature branches created for development must follow this format:
 
 ---
 
-## 2. Issue Lifecycle, Labels & State Machine
+## 2. Commit Message Standards & Cadence
+
+### Commit Message Standard (Conventional Commits)
+
+```text
+<type>(<scope>): <short imperative summary>
+
+[optional concise body explaining context/rationale]
+```
+
+* **Types**: `feat`, `fix`, `docs`, `refactor`, `perf`, `chore`, `security`.
+* **Subject**: Imperative mood ("add", "inject", "refactor", not "added" or "adds"), lowercase, under 72 characters, no trailing period.
+* **Body**: Keep concise and technical. Explain context and non-obvious rationale. NEVER write multi-paragraph essay-length commit messages.
+* **Rules**: Never use emojis, use plain ASCII hyphens (`-`), and NEVER auto-add agent co-author tags.
+
+### Commit Cadence (Atomic Chunking)
+
+* **Atomic Commits**: Commit immediately after completing and validating a distinct, working unit of work (e.g., adding a Nix module, updating a documentation file, or refactoring a network config).
+* **No Mega-Commits**: Do not accumulate multiple unrelated changes into single monolithic commits.
+* **Validation Gate**: Run relevant syntax and validation checks (e.g., `./tests/validate.sh`) before committing to ensure the working tree remains green.
+
+### Operator Consent & Push Policy
+
+* **Commit Preview Gate**: Never run `git commit` autonomously without explicit operator confirmation. Stop and present a concise report to obtain consent:
+  1. **Staged Files Preview**: List of files to be included in the commit.
+  2. **Proposed Commit Message**: Full text (`<type>(<scope>): <summary>` and concise body).
+* **Never Push Autonomously**: Never run `git push` to remote origins without explicit operator direction.
+
+---
+
+## 3. Issue Lifecycle, Labels & State Machine
 
 Every task follows a deterministic lifecycle tracked via GitHub labels:
 
@@ -67,7 +97,7 @@ Every task follows a deterministic lifecycle tracked via GitHub labels:
 
 ---
 
-## 3. Standard Writing Templates
+## 4. Standard Writing Templates
 
 When authoring issues, comments, or PRs, follow these templates unless the target repository provides specific `.github/` templates. Maintain Levi's voice: direct, technical, clear, and free of generic AI clichés.
 
@@ -148,7 +178,7 @@ Thanks for the feedback.
 
 ---
 
-## 4. Security & Least-Privilege PAT Scoping
+## 5. Security & Least-Privilege PAT Scoping
 
 When generating a Personal Access Token (PAT) for Kiro or automated agent tools on GitHub, apply least-privilege scoping to prevent destructive actions:
 
@@ -164,7 +194,7 @@ When generating a Personal Access Token (PAT) for Kiro or automated agent tools 
 
 ---
 
-## 5. Tooling Reference (`gh` CLI & MCP)
+## 6. Tooling Reference (`gh` CLI & MCP)
 
 ### Useful `gh` CLI Commands:
 

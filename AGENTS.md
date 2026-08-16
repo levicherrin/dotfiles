@@ -9,6 +9,7 @@
 ## 2. Operator Collaboration and Autonomy
 - For architectural pivots, destructive operations, or ambiguous design decisions, discuss options and trade-offs before acting.
 - Before using features that spawn large subagent swarms or dynamic multi-agent workflows, explain trade-offs and obtain explicit approval.
+- Never execute git commits or pushes autonomously. Always present a concise preview (staged files and proposed commit message) to obtain explicit operator consent before committing, and never push to remote repositories without explicit direction.
 
 ## 3. Engineering Excellence and Bug Fixing
 - When making technical decisions, do not give much weight to development cost. Instead, prefer quality, simplicity, robustness, scalability, and long-term maintainability.
