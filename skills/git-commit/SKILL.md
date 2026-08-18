@@ -1,6 +1,6 @@
 ---
 name: git-commit
-description: 'Execute git commit with conventional commit message analysis, intelligent staging, and message generation. Use when user asks to commit changes, create a git commit, or mentions "/commit". Supports: (1) Auto-detecting type and scope from changes, (2) Generating conventional commit messages from diff, (3) Interactive commit with optional type/scope/description overrides, (4) Intelligent file staging for logical grouping'
+description: 'Execute git commit with conventional commit message analysis, intelligent staging, and message generation. Use when user asks to commit changes, create a git commit, or mentions "/commit", or uses natural language like "save", "save this work", "save my work", "commit this work", "commit my work", "commit the current work". Supports: (1) Auto-detecting type and scope from changes, (2) Generating conventional commit messages from diff, (3) Interactive commit with optional type/scope/description overrides, (4) Intelligent file staging for logical grouping'
 license: MIT
 allowed-tools: Bash
 ---
@@ -86,12 +86,14 @@ Analyze the diff to determine:
 
 ### 4. Execute Commit
 
+**CRITICAL**: You MUST prefix your git commit command with the `AGENT_SKILL=git-commit` environment variable handshake to prove you are executing an authorized runbook.
+
 ```bash
 # Single line
-git commit -m "<type>[scope]: <description>"
+AGENT_SKILL=git-commit git commit -m "<type>[scope]: <description>"
 
 # Multi-line with body/footer
-git commit -m "$(cat <<'EOF'
+AGENT_SKILL=git-commit git commit -m "$(cat <<'EOF'
 <type>[scope]: <description>
 
 <optional body>

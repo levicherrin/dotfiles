@@ -157,6 +157,10 @@ in
 
   home.file.".kiro/skills".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/skills";
+
+  # Global Hooks Fan-out
+  home.file.".gemini/config/hooks.json".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/hooks.json";
 }
 
 

@@ -41,6 +41,8 @@ The MCP server does not currently support creating, updating, or commenting on i
 ## Workflow
 
 > **CRITICAL POLICY:** Before creating or modifying any issues, labels, or projects, you MUST read `~/.dotfiles/GITHUB_WORKFLOW.md`. It dictates the mandatory organizational issue templates (Templates A, B, C, D), required lifecycle labels (`status:` and `priority:`), and workflow states. All your CLI commands must adhere to this policy.
+>
+> **CRITICAL HANDSHAKE**: You MUST prefix all `gh api` and `gh issue` write commands with the environment variable `AGENT_SKILL=github-issues` to prove you are executing an authorized runbook (e.g., `AGENT_SKILL=github-issues gh api ...`).
 
 1. **Determine action**: Create, update, or query?
 2. **Gather context**: Get repo info, existing labels, milestones if needed
