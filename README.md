@@ -100,7 +100,6 @@ cd ~/.dotfiles
 | `flake.nix` | Flake entry point declaring Linux and macOS configurations |
 | `home.nix` | Universal user environment (CLI tools, Starship prompt, shell, symlinks) |
 | `darwin.nix` | macOS system defaults, Dock/Finder settings, and system packages |
-
 | `bootstrap.sh` | Automated bootstrap script for fresh machines |
 | `rebuild.sh` | Script to apply configuration changes |
 | `tmux.conf` | Terminal multiplexer configuration (mouse scrolling, 50k buffer, vi mode) |
@@ -109,20 +108,24 @@ cd ~/.dotfiles
 | `AGENTS.md` | Universal AI agent policy and engineering baseline |
 | `VOICE.md` | Writing style guide and persona for agent communication |
 | `OPINIONS.md` | Technical opinions and architectural heuristics |
-| `GHES_WORKFLOW.md` | GitHub Enterprise Server workflow, Projects v2, and templates |
-| `skills/` | Agent skills fan-out (github-issues, skill-intake) |
+| `GITHUB_WORKFLOW.md` | Unified GitHub workflow, Projects v2, and templates |
+| `BACKLOG.md` | Task tracking and cross-harness feature backlog |
+| `bin/` | Utility scripts and centralized agent guardrails (`guard-command.sh`) |
+| `hooks.json` | Agent lifecycle hook definitions for command interception |
+| `skills/` | Agent skills fan-out (git-commit, github-issues, skill-intake) |
 | `tests/` | Automated test suite (`lib.sh`, `validate.sh`) |
 
 ---
 
 ## Universal AI Agent Layer
 
-Declaratively fanned out via `home.nix` to **Google Antigravity** (`~/.gemini/config/rules/`), **AWS Kiro** (`~/.kiro/steering/`), and standard fallback paths (`~/.config/`):
+Declaratively fanned out via `home.nix` to **Google Antigravity** (`~/.gemini/config/rules/`, `~/.gemini/config/hooks.json`), **AWS Kiro** (`~/.kiro/steering/`), and standard fallback paths (`~/.config/`):
 
-* **`AGENTS.md` (Core Policy)**: Universal formatting rules (zero emojis, zero unicode em dashes, no AI co-author tag pollution), operator autonomy balance, and engineering excellence standards.
-* **`VOICE.md` (Communication Style)**: Writing tone, active voice, short paragraphs, and banned generic AI clichés ("delve", "tapestry", "game-changer", "leverage").
+* **`AGENTS.md` (Core Policy)**: Universal formatting rules (zero emojis, zero unicode em dashes, no AI co-author tag pollution), operator autonomy balance, MCP precedence over generic web search, and engineering excellence standards.
+* **`VOICE.md` (Communication Style)**: Writing tone, active voice, short paragraphs, and banned generic AI cliches ("delve", "tapestry", "game-changer", "leverage").
 * **`OPINIONS.md` (Architectural Heuristics)**: Technical preferences (simplicity over speculative abstractions, boring technology, minimal dependencies, mandatory end-to-end bug reproduction, and strict separation of agent execution from governance).
-* **`GHES_WORKFLOW.md` (Corporate GHES & Projects v2)**: Lifecycle state machine (`Backlog` -> `In Progress` -> `In Review` -> `Done`), branch standard (`<type>/<short-description>`), writing templates for issues/daily comments/PRs, and scoped PAT security rules.
+* **`GITHUB_WORKFLOW.md` (Unified GitHub Standards)**: Lifecycle state machine (`Backlog` -> `In Progress` -> `In Review` -> `Done`), branch standard (`<type>/<short-description>`), writing templates for issues/daily comments/PRs, and scoped PAT security rules across cloud and enterprise instances.
+* **`hooks.json` & `bin/guard-command.sh` (Execution Guardrails)**: Centralized command router enforcing explicit intent handshakes (`AGENT_SKILL=...`) on sensitive commands like `git commit` and `gh issue`.
 
 
 

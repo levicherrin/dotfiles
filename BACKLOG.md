@@ -16,3 +16,13 @@ Kiro's IPC architecture is fundamentally different from Antigravity's:
 - [ ] Create `bin/guard-command-kiro.sh` to parse the payload and use Exit Code 2 for denials.
 - [ ] Create `.kiro/hooks/command-router.json` with the `v1` schema pointing to the script.
 - [ ] Fan-out the Kiro JSON hook configuration via `home.nix`.
+
+## Evaluate Global Context Mounts for Agent Workspaces
+* **Priority**: Low
+* **Context**: When agents manually lookup skills using `view_file` on `~/.gemini/antigravity-cli/skills/...`, the sandbox resolves the symlink to `~/repos/dotfiles` and flags it as an out-of-workspace read, burying the operator in approval requests.
+* **Action Item**: Investigate if Antigravity/Kiro support configuring `~/repos/dotfiles` as a globally trusted read-only mount to prevent these sandbox interruptions.
+
+## Evaluate Nix Store Immutability for Skills
+* **Priority**: Low
+* **Context**: We currently use `mkOutOfStoreSymlink` in `home.nix` for skills to allow live-editing without a rebuild. However, this triggers symlink sandbox warnings. If we switch to standard Nix store copying (which places skills in the immutable `/nix/store`), security sandboxes typically whitelist these paths automatically.
+* **Action Item**: Once the rate of skill creation slows down, weigh the tradeoff of requiring a `rebuild.sh` for skill updates vs. gaining native sandbox whitelisting.

@@ -1,5 +1,25 @@
 # Changelog & Capabilities History
 
+## [Agent Execution Guardrails & Git Commit Standards] - 2026-08-19
+
+Introduced centralized agent command interception hooks, git-commit runbook, and tool selection precedence.
+
+### What Was Added & Updated
+
+1. **Centralized Command Guardrail Router**:
+   * **`bin/guard-command.sh`** - Bash router intercepting `run_command` payloads to block autonomous `git commit` and direct `gh issue` modifications unless an explicit handshake environment variable (`AGENT_SKILL=...`) is present.
+   * **`hooks.json`** - PreToolUse hook configuration for Google Antigravity fanned out via `home.nix` to `~/.gemini/config/hooks.json`.
+
+2. **Git Commit Skill & Policy Enforcement**:
+   * **`skills/git-commit/SKILL.md`** - Procedural runbook for conventional commits, preview formatting, and explicit operator consent.
+   * Updated `skills/github-issues/SKILL.md` to adhere to the handshake protocol.
+
+3. **Tool Selection Precedence & Governance**:
+   * Updated **`AGENTS.md`** with Section 4 (Tool Selection Precedence), mandating domain-specific MCP tools over generic web search.
+   * Added **`BACKLOG.md`** tracking AWS Kiro hook schema porting and agent workspace sandbox considerations.
+
+---
+
 ## [Unified Cross-Platform Nix Architecture] - 2026-08-09
 
 Integrated cross-platform Nix Flakes and Home Manager architecture supporting WSL2 Debian, native Debian GNU/Linux, and macOS.
