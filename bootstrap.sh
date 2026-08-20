@@ -33,6 +33,13 @@ for f in "$HOME/.bashrc" "$HOME/.bash_aliases" "$HOME/.profile"; do
   fi
 done
 
+# Safely prune empty app skeleton directories so Home Manager symlinks can link cleanly without data loss
+for target in "$HOME/.kiro/skills" "$HOME/.gemini/antigravity-cli/skills"; do
+  if [ -d "$target" ] && [ ! -L "$target" ]; then
+    rmdir "$target" 2>/dev/null || true
+  fi
+done
+
 echo "==> [4/4] Applying initial configuration..."
 OS="$(uname -s)"
 
