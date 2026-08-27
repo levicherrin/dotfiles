@@ -1,5 +1,16 @@
 # Changelog & Capabilities History
 
+## [Kiro v3 CLI & Corporate CA Bundle Alias] - 2026-08-27
+
+Added `kiro3` shell alias configuring `NODE_EXTRA_CA_CERTS` with corporate ManTech CA bundle and enabling Kiro CLI v3 mode.
+
+### What Was Added & Updated
+
+1. **Shell Aliases (`home.nix`)**:
+   * Added `kiro3` alias setting `NODE_EXTRA_CA_CERTS="$HOME/.local/share/certs/mantech-ca-bundle.pem" kiro-cli --v3` to prevent TLS errors under Netskope and default to Kiro v3.
+
+---
+
 ## [Agent Execution Guardrails & Git Commit Standards] - 2026-08-19
 
 Introduced centralized agent command interception hooks, git-commit runbook, and tool selection precedence.

@@ -84,6 +84,9 @@ in
       myip = "curl -s ipinfo.io; echo";
       c = "clear";
       reload = "source ~/.bashrc";
+
+      # AI Agent Shortcuts
+      kiro3 = "NODE_EXTRA_CA_CERTS=\"$HOME/.local/share/certs/mantech-ca-bundle.pem\" kiro-cli --v3";
     };
     initExtra = ''
       # Automatically switch from Windows user folder to Linux $HOME on shell start
