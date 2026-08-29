@@ -26,3 +26,12 @@ Kiro's IPC architecture is fundamentally different from Antigravity's:
 * **Priority**: Low
 * **Context**: We currently use `mkOutOfStoreSymlink` in `home.nix` for skills to allow live-editing without a rebuild. However, this triggers symlink sandbox warnings. If we switch to standard Nix store copying (which places skills in the immutable `/nix/store`), security sandboxes typically whitelist these paths automatically.
 * **Action Item**: Once the rate of skill creation slows down, weigh the tradeoff of requiring a `rebuild.sh` for skill updates vs. gaining native sandbox whitelisting.
+
+## Codify Skill Lifecycle to Prevent Frankenstein Bloat
+* **Priority**: Medium
+* **Context**: Iteratively patching agent skills on-the-fly during domain/project work leads to prompt creep, conflicting instructions, and bloated "Frankenstein" skill files. We need to formally codify a lifecycle process that enforces strict separation between procedural tool execution (the "How" in `skills/`) and architectural policy/heuristics (the "What & Why" in central dotfiles rules or project research docs), coordinating cross-project skill improvements through a structured batch-refinement queue.
+* **Action Items**:
+  - [ ] Document the 3-tier skill evolution model in `OPINIONS.md`: (1) Project-local discovery in `research/`, (2) Strict boundary between tool execution runbooks and domain design heuristics, (3) Central queueing in `BACKLOG.md` for curated batch refinement.
+  - [ ] Define strict structural bounds for `SKILL.md` files (100-150 lines target, procedural CLI/API commands only, fanning out large schemas to `references/`).
+  - [ ] Author guidelines detailing when an operational discovery warrants an `OPINIONS.md` update, a skill reference addition (`references/`), or a project-local runbook.
+
