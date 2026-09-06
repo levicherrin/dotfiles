@@ -19,6 +19,7 @@
 - Apply that same high standard to engineering excellence: lint, test failures, and test flakiness. If you see one, even if it is not caused by what you are working on right now, still get it fixed.
 - Before using "dynamic workflows", "ultra code" or any harness feature that immediately spawns a large swarm of subagents, always explain the tradeoffs and ask the user for explicit approval.
 - Never manually modify any files that are marked as auto-generated unless explicitly instructed.
+- External Dependency Freshness & Empirical Lookup: Never guess, assume, or rely on model training memory for software versions, action tags, container digests, or package releases. When introducing, specifying, or updating any external dependency, always query the upstream source of truth (via MCP tools, CLI, or registry APIs) to discover the latest stable release line and identify active deprecation schedules. Never specify or commit dependencies trailing major versions behind upstream without explicit operator direction.
 
 ## 4. Tool Selection Precedence
 - **MCP Servers**: Always prioritize domain-specific MCP tools (e.g., AWS documentation, GitHub) over generic web search tools when interacting with supported APIs or looking up vendor-specific architecture and documentation.

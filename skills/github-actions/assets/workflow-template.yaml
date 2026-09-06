@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "bin/**"
+      - "src/**"
+      - "tests/**"
+      - "pyproject.toml"
+      - "poetry.lock"
+      - ".github/workflows/ci.yaml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "bin/**"
+      - "src/**"
+      - "tests/**"
+      - "pyproject.toml"
+      - "poetry.lock"
+      - ".github/workflows/ci.yaml"
+
+# Deny all permissions by default; grant per job as needed
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Static Analysis & Lint (Fail Fast)
+        run: |
+          ruff check .
+          mypy src/
+
+      - name: Run Test Suite
+        env:
+          # Pass untrusted or dynamic contexts via env, never interpolate directly into run
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          pytest tests/ -v
