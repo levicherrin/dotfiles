@@ -13,7 +13,9 @@
 
 ## 3. Engineering Excellence and Bug Fixing
 - When making technical decisions, do not give much weight to development cost. Instead, prefer quality, simplicity, robustness, scalability, and long-term maintainability.
-- For one-off or infrequent operational work, start with the simplest direct end-to-end path. Do not build wrappers, control planes, policy layers, custom verifiers, or automation unless the direct path exposes a concrete blocker or repeated need that justifies the added machinery.
+- Start with the simplest direct end-to-end path for all software, services, and automation, regardless of execution frequency. Do not build wrappers, control planes, policy layers, pre-flight orchestrators, custom verifiers, or automation unless the direct native path (e.g., native systemd directives invoking a tool directly) exposes a concrete, reproducible blocker or repeated need that justifies the added machinery.
+- Idempotency Over Pre-Orchestration: When an underlying tool is idempotent and fast, invoke it directly. Never write wrapper scripts, pre-flight gatekeepers, or diff-checking logic to decide whether to invoke an idempotent tool. The tool itself is the state checker.
+- Radical Subtraction Before Scoping: When estimating, architecting, or implementing any backlog item or ADR, perform a radical subtraction test before writing code: What happens if we delete every custom script, intermediate wrapper, and policy layer, relying strictly on native OS primitives and existing tools? Eliminate every component that fails to justify its existence against the direct native path.
 - When doing bug fixes, always start with reproducing the bug in an end-to-end setting as closely aligned with how an end user would experience it as possible. This makes sure you find the real problem so your fix will actually solve it.
 - If something clearly looks off, even if it is not directly related to what you are doing, try to get it fixed along the way.
 - Apply that same high standard to engineering excellence: lint, test failures, and test flakiness. If you see one, even if it is not caused by what you are working on right now, still get it fixed.

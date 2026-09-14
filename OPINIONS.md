@@ -9,6 +9,7 @@ When evaluating technical architectures, selecting tools, or designing software 
 * **Boring Technology**: Prefer proven, mature technologies with well-understood failure modes over newly hyped frameworks.
 * **Monolith First**: Default to unified, modular architectures before breaking systems into distributed services.
 * **Single Source of Truth**: Eliminate configuration drift by managing state declaratively (e.g., Nix, Infrastructure as Code).
+* **Idempotency Over Pre-Orchestration**: When an underlying tool is idempotent and fast, invoke it directly. Never write wrapper scripts, pre-flight gatekeepers, or diff-checking logic to decide whether to invoke an idempotent tool. The tool itself is the state checker.
 
 ---
 
@@ -34,5 +35,6 @@ When evaluating technical architectures, selecting tools, or designing software 
 ---
 
 ## 5. Operational Discipline
-* **Direct Path**: For one-off or infrequent operations, take the direct path. Do not build custom wrappers, policy engines, or control planes without concrete repeat demand.
+* **Direct Path**: Start with the simplest direct end-to-end path for all software, services, and automation, regardless of execution frequency. Do not build custom wrappers, policy engines, pre-flight orchestrators, or control planes unless the direct native path (e.g., native systemd directives invoking a tool directly) exposes a concrete, reproducible blocker that justifies the added machinery.
+* **Radical Subtraction Before Scoping**: Before architecting, estimating, or implementing any feature or backlog item, perform a radical subtraction test: eliminate every intermediate script, abstraction, and wrapper. If native OS primitives (systemd, git, POSIX shell) and existing tools can execute the workflow directly, build only that minimal configuration.
 * **Clean History**: Write atomic, descriptive commit messages without automated agent co-author tags.
