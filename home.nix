@@ -2,6 +2,23 @@
 
 let
   dotfiles = "${config.home.homeDirectory}/.dotfiles";
+
+  # Agent Skills Fan-out (Claude Code): only direct children of
+  # ~/.claude/skills/ are discovered, so link each skill individually,
+  # skipping non-skill dirs such as *-workspace eval outputs.
+  # pathExists guards readDir, which is eager and would otherwise crash
+  # `nix flake check` on other platforms' homeConfigurations.
+  claudeSkillLinks =
+    if builtins.pathExists "${dotfiles}/skills"
+    then builtins.listToAttrs (map
+      (name: {
+        name = ".claude/skills/${name}";
+        value.source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/skills/${name}";
+      })
+      (builtins.filter
+        (name: builtins.pathExists "${dotfiles}/skills/${name}/SKILL.md")
+        (builtins.attrNames (builtins.readDir "${dotfiles}/skills"))))
+    else { };
 in
 {
   home.username = user;
@@ -135,35 +152,42 @@ in
   };
 
   # Live Edit-in-Place Symlinks
-  home.file.".config/nvim".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/.config/nvim";
+  home.file = {
+    ".config/nvim".source =
+      config.lib.file.mkOutOfStoreSymlink "${dotfiles}/.config/nvim";
 
-  home.file.".config/wezterm".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/.config/wezterm";
+    ".config/wezterm".source =
+      config.lib.file.mkOutOfStoreSymlink "${dotfiles}/.config/wezterm";
 
-  home.file.".tmux.conf".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/tmux.conf";
+    ".tmux.conf".source =
+      config.lib.file.mkOutOfStoreSymlink "${dotfiles}/tmux.conf";
 
-  # Universal AI Agent Policy Fan-out (Antigravity & Kiro)
-  home.file.".gemini/config/rules/AGENTS.md".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AGENTS.md";
+    # Universal AI Agent Policy Fan-out (Antigravity & Kiro)
+    ".gemini/config/rules/AGENTS.md".source =
+      config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AGENTS.md";
 
-  home.file.".kiro/steering/AGENTS.md".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AGENTS.md";
+    ".kiro/steering/AGENTS.md".source =
+      config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AGENTS.md";
 
-  home.file.".config/AGENTS.md".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AGENTS.md";
+    ".config/AGENTS.md".source =
+      config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AGENTS.md";
 
-  # Agent Skills Fan-out (Antigravity CLI & Kiro)
-  home.file.".gemini/antigravity-cli/skills".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/skills";
+    # Agent Skills Fan-out (Antigravity CLI & Kiro)
+    ".gemini/antigravity-cli/skills".source =
+      config.lib.file.mkOutOfStoreSymlink "${dotfiles}/skills";
 
-  home.file.".kiro/skills".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/skills";
+    ".kiro/skills".source =
+      config.lib.file.mkOutOfStoreSymlink "${dotfiles}/skills";
 
-  # Global Hooks Fan-out
-  home.file.".gemini/config/hooks.json".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/hooks.json";
+    # Global Hooks Fan-out
+    ".gemini/config/hooks.json".source =
+      config.lib.file.mkOutOfStoreSymlink "${dotfiles}/hooks.json";
+
+    # Universal AI Agent Policy Fan-out (Claude Code): global memory file
+    # must be named CLAUDE.md; no user-level AGENTS.md fallback.
+    ".claude/CLAUDE.md".source =
+      config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AGENTS.md";
+  } // claudeSkillLinks;
 }
 
 

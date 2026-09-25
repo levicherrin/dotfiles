@@ -32,6 +32,13 @@ bash bootstrap.sh
 * **CLI Suite via Nix**: Installs `neovim`, `tmux`, `ripgrep`, `fd`, `fzf`, `jq`, `lazygit`, `tree`, and `nerd-fonts.hack`.
 * **Shell & Prompt**: Configures modern Bash 5, Starship prompt, and live symlinks (`~/.config/nvim`, `~/.config/wezterm`, `~/.tmux.conf`).
 
+#### Step 3: Launch WezTerm & Pin to Dock
+Nix-Darwin installs GUI applications into `/Applications/Nix Apps/`. Launch WezTerm from your terminal:
+```bash
+open "/Applications/Nix Apps/WezTerm.app"
+```
+Once WezTerm is running, right-click its icon in the macOS Dock and select **Options > Keep in Dock** to retain persistent one-click access.
+
 > [!TIP]
 > **VS Code & Kiro IDE Terminal Configuration**:
 > If your editor `settings.json` has a hardcoded path for Bash (such as `"/bin/bash"`), update it to `"path": "bash"` under your terminal profile settings. This ensures the integrated terminal resolves your active Nix Bash environment from `PATH`.
@@ -112,20 +119,25 @@ cd ~/.dotfiles
 | `BACKLOG.md` | Task tracking and cross-harness feature backlog |
 | `bin/` | Utility scripts and centralized agent guardrails (`guard-command.sh`) |
 | `hooks.json` | Agent lifecycle hook definitions for command interception |
-| `skills/` | Agent skills fan-out (git-commit, github-issues, skill-intake) |
+| `skills/` | Curated agent skills, fanned out to Antigravity, Kiro, and Claude Code |
 | `tests/` | Automated test suite (`lib.sh`, `validate.sh`) |
 
 ---
 
 ## Universal AI Agent Layer
 
-Declaratively fanned out via `home.nix` to **Google Antigravity** (`~/.gemini/config/rules/`, `~/.gemini/config/hooks.json`), **AWS Kiro** (`~/.kiro/steering/`), and standard fallback paths (`~/.config/`):
+Declaratively fanned out via `home.nix` to **Google Antigravity** (`~/.gemini/config/rules/`, `~/.gemini/config/hooks.json`), **AWS Kiro** (`~/.kiro/steering/`), **Claude Code** (`~/.claude/CLAUDE.md`, `~/.claude/skills/<name>/`), and standard fallback paths (`~/.config/`):
 
 * **`AGENTS.md` (Core Policy)**: Universal formatting rules (zero emojis, zero unicode em dashes, no AI co-author tag pollution), operator autonomy balance, MCP precedence over generic web search, and engineering excellence standards.
 * **`VOICE.md` (Communication Style)**: Writing tone, active voice, short paragraphs, and banned generic AI cliches ("delve", "tapestry", "game-changer", "leverage").
 * **`OPINIONS.md` (Architectural Heuristics)**: Technical preferences (simplicity over speculative abstractions, boring technology, minimal dependencies, mandatory end-to-end bug reproduction, and strict separation of agent execution from governance).
 * **`GITHUB_WORKFLOW.md` (Unified GitHub Standards)**: Lifecycle state machine (`Backlog` -> `In Progress` -> `In Review` -> `Done`), branch standard (`<type>/<short-description>`), writing templates for issues/daily comments/PRs, and scoped PAT security rules across cloud and enterprise instances.
-* **`hooks.json` & `bin/guard-command.sh` (Execution Guardrails)**: Centralized command router enforcing explicit intent handshakes (`AGENT_SKILL=...`) on sensitive commands like `git commit` and `gh issue`.
+* **`hooks.json` & `bin/guard-command.sh` (Execution Guardrails)**: Centralized command router enforcing explicit intent handshakes (`AGENT_SKILL=...`) on sensitive commands like `git commit` and `gh issue`. Not yet ported to Claude Code; see `BACKLOG.md`.
+
+Claude Code specifics:
+* `~/.claude/CLAUDE.md` symlinks directly to `AGENTS.md` (no user-level `AGENTS.md` support in Claude Code).
+* Skills only discover as *direct* children of `~/.claude/skills/`, so `home.nix` links each `skills/<name>/` individually rather than the whole folder, generated from the directory listing so new skills need no edit. `synced/`, Claude Code's own built-in skills bucket, is untouched.
+* `~/.claude/settings.json` is left unmanaged; it holds live app state (model, theme, effort level) a declarative symlink would clobber.
 
 
 
