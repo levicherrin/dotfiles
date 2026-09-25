@@ -44,7 +44,7 @@ Assess against these criteria:
 **Not worth adopting if it:**
 - Duplicates what the agent handles natively without guidance
 - Is entirely generic advice with no executable specifics
-- Requires proprietary tooling unavailable in Antigravity or Kiro
+- Requires tooling that only one harness provides (Antigravity, Kiro, or Claude Code). Every skill in `skills/` is fanned out to all three.
 
 Report findings to the operator before proceeding. Include:
 - What the skill covers and how deeply
@@ -390,18 +390,9 @@ Take the best description and update the skill's SKILL.md frontmatter. Show the 
 
 Once the skill passes operator review and `./tests/validate.sh` passes:
 
-1. Confirm the skill is placed under `~/repos/dotfiles/skills/<domain>/<skill-name>/SKILL.md`
-2. Check whether `~/.gemini/config/skills` and `~/.kiro/skills` are already symlinked to `~/repos/dotfiles/skills/`. If they are, the new skill is immediately discoverable.
-3. If the symlinks do not yet exist, add them to `home.nix` and run `./rebuild.sh`:
-
-```nix
-home.file.".gemini/config/skills".source =
-  config.lib.file.mkOutOfStoreSymlink "${dotfiles}/skills";
-
-home.file.".kiro/skills".source =
-  config.lib.file.mkOutOfStoreSymlink "${dotfiles}/skills";
-```
-
+1. Confirm the skill is placed at `~/repos/dotfiles/skills/<skill-name>/SKILL.md`, a direct child of `skills/`. Do not nest it under a domain folder: Claude Code only discovers direct children.
+2. Antigravity (`~/.gemini/antigravity-cli/skills`) and Kiro (`~/.kiro/skills`) symlink the whole `skills/` directory, so the new skill is discoverable there immediately.
+3. Claude Code gets one symlink per skill, generated in `home.nix` from the `skills/` listing at build time. Run `./rebuild.sh`, then `/reload-skills` in Claude Code and confirm the skill appears in `/skills`.
 4. Run `./tests/validate.sh` one final time. It must pass cleanly before the skill is considered complete.
 
 ---
