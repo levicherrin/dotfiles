@@ -42,6 +42,7 @@ Spec-Driven Development supports two workflows:
 
 1. **Context & Repository Scan**:
    - Inspect repository structure and check for Diataxis conventions (`research/`, `docs/03_reference/`).
+   - Load an options brief from the `research` skill (`research/<topic>/options-brief.md`) if one exists, and build on its decision.
    - Identify operational constraints, host environment, and blast radius.
 
 2. **Formulate Specification**:
@@ -70,6 +71,7 @@ Spec-Driven Development supports two workflows:
 
 1. **Lightweight Scan**:
    - Check existing specifications in `research/specs/` or `docs/specs/` to prevent duplicate boundaries or conflicting ownership.
+   - Check for an options brief from the `research` skill (`research/<topic>/options-brief.md`). If one exists, load it: its Decision is the selected direction and its Ruled Out list is settled.
    - Inspect project root to detect repository conventions (e.g., Diataxis), existing tools, and layout.
 
 2. **Problem Framing Interview**:
@@ -80,7 +82,7 @@ Spec-Driven Development supports two workflows:
    - **Operational Constraints**: What are host runtime restrictions (e.g., rootless Podman, systemd dependencies, ZFS dataset properties, Python/Bash runtime constraints)?
 
 3. **Approach Evaluation**:
-   Propose 2-3 technical approaches adhering to `OPINIONS.md` (Simplicity Over Complexity, Boring Technology, Minimal Dependency Footprint):
+   If an options brief was loaded in step 1, restate its chosen direction and confirm it with the operator instead of proposing fresh approaches. Otherwise, propose 2-3 technical approaches adhering to `OPINIONS.md` (Simplicity Over Complexity, Boring Technology, Minimal Dependency Footprint):
    - Contrast architecture, dependencies, risks, and implementation complexity.
    - **Upstream Dependency Discovery**: When evaluating external tools, container base images, or CI actions, query upstream registries/APIs (e.g., GitHub MCP `github:get_latest_release`, registry CLI) to determine active stable release lines and deprecation timelines before proposing approaches.
    - Recommend the simplest viable approach that solves the concrete problem.

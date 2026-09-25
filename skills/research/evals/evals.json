@@ -1,0 +1,55 @@
+{
+  "skill_name": "research",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "research deeply whether we should move immich off rootless podman, the networking keeps fighting us",
+      "expected_output": "Deep track first turn: grounds in the full Immich configs and the incident record, notes there is no documented networking problem, asks for the concrete symptom before any conclusion or hypothesis, keeps any likely backlog additions short, and does no outside research.",
+      "files": [],
+      "expectations": [
+        "Reads the full Immich container or service config files (not only design docs) before responding",
+        "Checks incident documentation (docs/05_incidents/) or BACKLOG.md for a record of the networking problem",
+        "The final message tells the operator whether a documented record of the problem was found and asks for the concrete symptom",
+        "No verdict, recommendation, diagnosis, or hypothesis about the cause appears before the questions in the final message",
+        "Any 'Likely backlog additions' section has at most five items, one line each",
+        "No web or MCP research is performed before the operator check-in",
+        "The response does not announce or justify the research track"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "research lightly what zigbee coordinator people are running with home assistant these days",
+      "expected_output": "Light track answered in one turn: grounded in the Zigbee2MQTT config, opens with stated assumptions, presents several options with confidence-tagged and dated primary-leaning sources related to the current setup, offers at most a labeled lean, lists the plaintext network_key under Likely backlog additions, and lists local references. No stop to ask questions first and no probing of why the question was asked.",
+      "files": [],
+      "expectations": [
+        "Reads the Zigbee2MQTT config in the homelab repo before answering",
+        "Answers in this turn instead of stopping to ask questions before researching",
+        "The answer opens with explicitly stated assumptions the operator can correct",
+        "The answer never asks what prompted the question or why the operator is asking",
+        "Presents more than one option, and every claim carries exactly one of confirmed, likely, or speculative",
+        "Every claim tagged confirmed traces to a page fetch or file read in actions.md, not only a search result",
+        "Cites a URL and date for each claim, with at least one vendor or project primary source per option",
+        "Relates the options to the current setup found in the repo (existing adapter and Zigbee2MQTT)",
+        "Offers at most a lean explicitly labeled as a lean, not a decision",
+        "Lists the plaintext network_key under a 'Likely backlog additions' section and asks whether to add it to the backlog, without fixing it",
+        "Includes a Local references list of repo paths near the end, before only the closing question",
+        "The response does not announce or justify the research track"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "research dispatcharr vs threadfin for our iptv flow",
+      "expected_output": "Grounds in the existing iptv research and service configs, stops to ask the operator to clone both repos to ~/repos before researching their source, lists likely backlog additions with a backlog question, and names no winner.",
+      "files": [],
+      "expectations": [
+        "The response does not announce or justify the research track",
+        "Reads the existing research/iptv_flow_dispatcharr.md before responding",
+        "The final message states what the config/services/ check found for Dispatcharr and Threadfin (present, absent, or partial)",
+        "Checks ~/repos for existing clones, then stops to ask the operator to clone any missing dispatcharr or threadfin repositories before researching their source",
+        "Does not fetch repository source files piece by piece over the web or API",
+        "The final message has a 'Likely backlog additions' section with at least one item (undeclared Dispatcharr deployment, broken doc link, or similar) and asks whether to add them to the backlog",
+        "The final message does not declare a winner between dispatcharr and threadfin"
+      ]
+    }
+  ]
+}
