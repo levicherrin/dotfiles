@@ -11,7 +11,7 @@
 
 | Task ID | Phase | Description | Target Files | Mapped Criteria | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **TASK-01** | 1: Definition | Author executable specialist agent markdown file | `agents/observability.md` | `AC-01` - `AC-09` | Completed |
+| **TASK-01** | 1: Definition | Author executable specialist agent markdown file | `agents/observability-agy.md` | `AC-01` - `AC-09` | Completed |
 | **TASK-02** | 2: Fan-out | Configure declarative fan-out in Home Manager | `home.nix`, `rebuild.sh` | System Discovery | Completed |
 | **TASK-03** | 2: Verification | Verify agent registration in Antigravity harness | CLI / `agy` | `AC-01`, `AC-03` | Completed |
 | **TASK-04** | 3: Validation | Execute live end-to-end test against Grafana MCP | Fresh `agy` session | `AC-01` - `AC-07` | Completed |
@@ -22,7 +22,7 @@
 
 ## Phase 1: Executable Agent Definition
 
-### TASK-01: Author `agents/observability.md`
+### TASK-01: Author `agents/observability-agy.md`
 - **Objective**: Create the declarative specialist agent file with frontmatter metadata, tool boundaries, declared datasource topology, and strict output contract instructions.
 - **Requirements**:
   - Frontmatter must define `name: observability`, description, Gemini 3.8 Flash model, read-only tools, and `enable_mcp_tools: true`.
@@ -32,7 +32,7 @@
   - Must incorporate the machine-parseable `STATUS:` header and Output Contract from Section 5.2.
   - Must incorporate the Friction-Triggered Feedback Bubble-Up instructions from Section 5.2 (Item 5).
 - **Completion Check**:
-  - File exists at `agents/observability.md`.
+  - File exists at `agents/observability-agy.md`.
   - Frontmatter parses cleanly as valid YAML.
   - `./tests/validate.sh` passes with zero em dashes.
 
@@ -52,7 +52,7 @@
 ### TASK-03: Verify Agent Discovery in Antigravity Harness
 - **Objective**: Verify that the primary agent recognizes `observability` in its subagent registry.
 - **Requirements**:
-  - Run non-interactive `agy -p` to verify that `observability` appears under available subagents or agents list.
+  - Run non-interactive `agy agents` to verify that `observability` appears under available subagents list.
 - **Completion Check**:
   - `agy` recognizes the `observability` agent by name and role.
 

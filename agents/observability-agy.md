@@ -11,9 +11,6 @@ skills:
   - loki
   - promql
   - alloy
-  - skills/loki
-  - skills/promql
-  - skills/alloy
 mcpServers:
   - name: grafana
     command: mcp-grafana

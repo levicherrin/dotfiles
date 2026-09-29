@@ -17,6 +17,7 @@
   - **Delegation Scope & Guardrails**:
     - Promote subagents for context preservation (isolating large log or metric dumps), parallel service investigations, and speculative tests in isolated worktrees (`branch` or `share`).
     - Do not spawn subagents for trivial operations that direct native tools can execute immediately.
+    - **Telemetry & Incident Triage**: Whenever investigating homelab service health, error patterns, Loki logs, or Prometheus metrics and alerts, the coordinator MUST delegate to the dedicated specialist subagent (`observability`) rather than calling Grafana MCP tools directly in the primary session.
     - Subagents must never perform autonomous git commits or remote pushes. The primary agent remains the sole gatekeeper for operator interaction.
 - Never execute git commits or pushes autonomously. Always present a concise preview (staged files and proposed commit message) to obtain explicit operator consent before committing, and never push to remote repositories without explicit direction.
 

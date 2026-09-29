@@ -91,13 +91,36 @@ Our homelab infrastructure routes all logs through Grafana Alloy (`repos/homelab
    - **Negative Invariant**: The agent is strictly prohibited from running broad, unindexed free-text regexes (e.g. `{service_name=~".+"} |~ "(?i)error"`) across multi-service streams, as this causes false positives from HTML/CSS tags, informational JSON fields, and status strings.
 
 ### 3.6 Allowed Capabilities & Runtime Parameters
+- **Target Artifacts**:
+  - Antigravity Harness: `agents/observability-agy.md` (`name: observability`).
+  - Claude Code Harness: `agents/observability-cc.md` (`name: observability`).
 - **Model**: Gemini 3.8 Flash across all invocations (`model: flash`).
 - **Execution Symmetry**: `mainAgent: true`, `subagent: true`.
 - **Command Policy**: `commandExecutionPolicy: off` (Hard shell execution disablement).
 - **Native Tools**: `tools: [view_file]` (Strict read-only inspection; strips `search_web`, `write_to_file`, `replace_file_content`, `run_command`).
 - **MCP Servers**: `mcpServers:` configured specifically for `grafana` (Excludes foreign MCP servers like `github` or `aws`).
-- **Bound Skills**: `skills: [loki, promql, alloy, skills/loki, skills/promql, skills/alloy]`.
+- **Bound Skills**: `skills: [loki, promql, alloy]`.
 - **Query Guardrails**: Relies directly on `mcp-grafana` native server limits (`-max-loki-log-limit 100`, `-loki-guardrail-max-range`, `-loki-guardrail-max-bytes`).
+
+### 3.7 Linux-Native Environment Prerequisites & Secret Isolation
+Per repository security policy and `OPINIONS.md`, sensitive credentials (such as Grafana service account tokens) must NEVER be committed to Git or embedded in declarative Nix expressions (which risk leaking secrets into the world-readable `/nix/store` or triggering repository push protection):
+
+1. **Host Configuration (`environment.d`)**:
+   - Environment variables are managed using the Linux-native `systemd environment.d` specification.
+   - Secrets file: `~/.config/environment.d/secrets.conf` with restricted permissions (`chmod 600 ~/.config/environment.d/secrets.conf`).
+   - Declared variables:
+     ```bash
+     GRAFANA_URL="https://grafana.leebo.net"
+     GRAFANA_SERVICE_ACCOUNT_TOKEN="glsa_..."
+     ```
+2. **Session Persistence & Activation**:
+   - On systemd-managed Linux environments (including WSL2 Debian with systemd enabled), `systemd-environment-d-generator(8)` reads `~/.config/environment.d/*.conf` at user login.
+   - For live application without rebooting or logging out, variables are imported immediately into the active user session manager:
+     ```bash
+     systemctl --user set-environment GRAFANA_URL="https://grafana.leebo.net" GRAFANA_SERVICE_ACCOUNT_TOKEN="glsa_..."
+     ```
+3. **Dynamic Harness Expansion**:
+   - Agent harness configurations (`~/.gemini/config/mcp_config.json`) and agent definitions (`agents/observability-agy.md`) dynamically expand `${GRAFANA_URL}` and `${GRAFANA_SERVICE_ACCOUNT_TOKEN}` from the environment at process execution time, preventing any static credential leakage.
 
 ---
 
@@ -113,7 +136,7 @@ Per Section 2 of `OPINIONS.md`, operational know-how lives in skills, not in age
 ### 4.2 Datasource Topology Evolution
 If Grafana datasources are re-provisioned or migrated (changing their UIDs):
 - The authoritative UIDs in Section 3.4 of this specification are updated.
-- The corresponding agent definition in `agents/observability.md` is updated and fanned out declaratively via `home.nix`.
+- The corresponding agent definitions in `agents/observability-agy.md` (and `agents/observability-cc.md`) are updated and fanned out declaratively via `home.nix`.
 
 ### 4.3 Incident Feedback Ingestion
 When a post-incident analysis in the homelab surfaces an unindexed label or slow query pattern:
