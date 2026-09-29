@@ -172,12 +172,19 @@ in
     ".config/AGENTS.md".source =
       config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AGENTS.md";
 
-    # Agent Skills Fan-out (Antigravity CLI & Kiro)
+    # Agent Skills Fan-out (Antigravity & Kiro)
+    ".gemini/config/skills".source =
+      config.lib.file.mkOutOfStoreSymlink "${dotfiles}/skills";
+
     ".gemini/antigravity-cli/skills".source =
       config.lib.file.mkOutOfStoreSymlink "${dotfiles}/skills";
 
     ".kiro/skills".source =
       config.lib.file.mkOutOfStoreSymlink "${dotfiles}/skills";
+
+    # Specialist Agents Fan-out (Antigravity)
+    ".gemini/config/agents".source =
+      config.lib.file.mkOutOfStoreSymlink "${dotfiles}/agents";
 
     # Global Hooks Fan-out
     ".gemini/config/hooks.json".source =

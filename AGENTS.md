@@ -8,7 +8,16 @@
 
 ## 2. Operator Collaboration and Autonomy
 - For architectural pivots, destructive operations, or ambiguous design decisions, discuss options and trade-offs before acting.
-- Before using features that spawn large subagent swarms or dynamic multi-agent workflows, explain trade-offs and obtain explicit approval.
+- **Subagent Orchestration & Model Policy**:
+  - **Daily Driver**: Default to Gemini 3.8 Flash across all workflows and subagents. Avoid obsolete legacy models (e.g., Gemini Pro 3.1).
+  - **Thinking Effort Calibration**:
+    - *Low to Medium Effort*: Default for subagents, particularly background tasks, Grafana MCP log/metric triage, documentation lookup, and context isolation.
+    - *High Effort*: Permitted only when complex multi-service synthesis, tricky debugging, or substantial architectural refactors explicitly demand deeper reasoning.
+  - **External Model Escalation**: Restrict quota-capped models (e.g., Claude Sonnet) to explicit, high-value escalations where Gemini 3.8 Flash reaches a verifiable reasoning impasse. Never use external models for routine subagents or log parsing.
+  - **Delegation Scope & Guardrails**:
+    - Promote subagents for context preservation (isolating large log or metric dumps), parallel service investigations, and speculative tests in isolated worktrees (`branch` or `share`).
+    - Do not spawn subagents for trivial operations that direct native tools can execute immediately.
+    - Subagents must never perform autonomous git commits or remote pushes. The primary agent remains the sole gatekeeper for operator interaction.
 - Never execute git commits or pushes autonomously. Always present a concise preview (staged files and proposed commit message) to obtain explicit operator consent before committing, and never push to remote repositories without explicit direction.
 
 ## 3. Engineering Excellence and Bug Fixing
@@ -19,7 +28,6 @@
 - When doing bug fixes, always start with reproducing the bug in an end-to-end setting as closely aligned with how an end user would experience it as possible. This makes sure you find the real problem so your fix will actually solve it.
 - If something clearly looks off, even if it is not directly related to what you are doing, try to get it fixed along the way.
 - Apply that same high standard to engineering excellence: lint, test failures, and test flakiness. If you see one, even if it is not caused by what you are working on right now, still get it fixed.
-- Before using "dynamic workflows", "ultra code" or any harness feature that immediately spawns a large swarm of subagents, always explain the tradeoffs and ask the user for explicit approval.
 - Never manually modify any files that are marked as auto-generated unless explicitly instructed.
 - External Dependency Freshness & Empirical Lookup: Never guess, assume, or rely on model training memory for software versions, action tags, container digests, or package releases. When introducing, specifying, or updating any external dependency, always query the upstream source of truth (via MCP tools, CLI, or registry APIs) to discover the latest stable release line and identify active deprecation schedules. Never specify or commit dependencies trailing major versions behind upstream without explicit operator direction.
 
