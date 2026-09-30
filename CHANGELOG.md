@@ -1,5 +1,26 @@
 # Changelog & Capabilities History
 
+## [Claude Code Observability Agent Fan-out] - 2026-09-29
+
+Fanned the `observability` specialist out to Claude Code alongside Antigravity, with one agent directory per harness.
+
+### What Was Added & Updated
+
+1. **Per-Harness Agent Directories**:
+   * **`agents/agy/observability.md`** - Antigravity definition (moved from `agents/observability-agy.md`), fanned out to `~/.gemini/config/agents`.
+   * **`agents/claude/observability.md`** - Claude Code definition (`model: sonnet`, `tools: Read, mcp__grafana`, bare skill names), fanned out to `~/.claude/agents` via `home.nix`. `rebuild.sh` prunes the empty skeleton directory before linking.
+
+2. **Grafana MCP Credential Inheritance (Claude Code)**:
+   * Claude Code does not read `environment.d` and WSL terminals lack the systemd user environment, so the server launches via `systemd-run --user --pipe --collect --property=RuntimeMaxSec=1h mcp-grafana`. The transient unit inherits the systemd user manager environment: no shell init, no `home.nix` env, no token in the `claude` process. One unit per subagent invocation; the 1h cap bounds units orphaned by a hard kill.
+
+3. **Model Selection**:
+   * Evaluated `haiku` against `sonnet` for the Claude variant. `haiku` failed the output contract on one test and contradicted its own numbers on the other, so `sonnet` is the default.
+
+4. **Specification**:
+   * `docs/specs/observability-agent/` updated with per-harness parameters, `AC-10`, verified frontmatter constraints (list-of-maps `mcpServers`, no `${VAR}` in `env`), unit lifecycle, and TASK-07 and TASK-08 results.
+
+---
+
 ## [Kiro v3 CLI & Corporate CA Bundle Alias] - 2026-08-27
 
 Added `kiro3` shell alias configuring `NODE_EXTRA_CA_CERTS` with corporate ManTech CA bundle and enabling Kiro CLI v3 mode.

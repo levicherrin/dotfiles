@@ -28,11 +28,11 @@ Introduce an isolated, capability-decoupled specialist subagent (`observability`
 These rules are enforced structurally through capability configurations and prompt constraints:
 
 1. **`NEVER execute environment-mutating tools`**:
-   The specialist must have `enable_write_tools: false`. It cannot create, edit, or delete files on the host filesystem (`write_to_file`, `replace_file_content`, mutating shell scripts). It is strictly read-only.
+   The specialist must have `enable_write_tools: false` (Antigravity) or a `tools` allowlist that omits `Bash`, `Edit`, and `Write` (Claude Code). It cannot create, edit, or delete files on the host filesystem (`write_to_file`, `replace_file_content`, mutating shell scripts). It is strictly read-only.
 2. **`NEVER execute git commits or pushes`**:
    The specialist must never stage, commit, or push code. Git authoring authority remains strictly with the human operator per `AGENTS.md`.
 3. **`NEVER spawn recursive subagents`**:
-   The specialist must have `enable_subagent_tools: false`. It operates strictly as a leaf worker and cannot define or spawn subordinate agents.
+   The specialist must have `enable_subagent_tools: false` (Antigravity) or omit `Agent` from its `tools` allowlist (Claude Code). It operates strictly as a leaf worker and cannot define or spawn subordinate agents.
 4. **`NEVER dump unparsed raw logs to the coordinator`**:
    The specialist must never return raw log streams or large unstructured JSON payloads to the coordinator. All telemetry must be aggregated, deduplicated, and synthesized before handoff.
 5. **`NEVER mutate Grafana or datasource configuration`**:
@@ -91,15 +91,26 @@ Our homelab infrastructure routes all logs through Grafana Alloy (`repos/homelab
    - **Negative Invariant**: The agent is strictly prohibited from running broad, unindexed free-text regexes (e.g. `{service_name=~".+"} |~ "(?i)error"`) across multi-service streams, as this causes false positives from HTML/CSS tags, informational JSON fields, and status strings.
 
 ### 3.6 Allowed Capabilities & Runtime Parameters
-- **Target Artifacts**:
-  - Antigravity Harness: `agents/observability-agy.md` (`name: observability`).
-  - Claude Code Harness: `agents/observability-cc.md` (`name: observability`).
-- **Model**: Gemini 3.8 Flash across all invocations (`model: flash`).
-- **Execution Symmetry**: `mainAgent: true`, `subagent: true`.
-- **Command Policy**: `commandExecutionPolicy: off` (Hard shell execution disablement).
-- **Native Tools**: `tools: [view_file]` (Strict read-only inspection; strips `search_web`, `write_to_file`, `replace_file_content`, `run_command`).
-- **MCP Servers**: `mcpServers:` configured specifically for `grafana` (Excludes foreign MCP servers like `github` or `aws`).
-- **Bound Skills**: `skills: [loki, promql, alloy]`.
+- **Target Artifacts** (one directory per harness; each is fanned out as a whole directory symlink, so a harness never discovers another harness's definition):
+  - Antigravity Harness: `agents/agy/observability.md` (`name: observability`), fanned out to `~/.gemini/config/agents`.
+  - Claude Code Harness: `agents/claude/observability.md` (`name: observability`), fanned out to `~/.claude/agents`.
+- **Shared Parameters**:
+  - **Body**: The prompt body (Sections 1-5 of the agent definition) is identical across harnesses. Only frontmatter differs.
+  - **Bound Skills**: `skills: [loki, promql, alloy]` (bare skill names, resolved from each harness's skills fan-out).
+  - **MCP Servers**: `grafana` only (excludes foreign MCP servers like `github` or `aws`).
+- **Claude Model Rationale**: `sonnet` is the default because the agent must author valid LogQL/PromQL first try, honor seven invariants and a rigid output contract, and apply Default-FAIL reasoning. `haiku` was evaluated in TASK-08 and failed the output contract and numeric accuracy criteria, so `sonnet` remains the default.
+- **Per-Harness Parameters**:
+
+  | Parameter | Antigravity (`agents/agy/`) | Claude Code (`agents/claude/`) |
+  | :--- | :--- | :--- |
+  | Model | `flash` (Gemini 3.8 Flash) | `sonnet` |
+  | Execution symmetry | `mainAgent: true`, `subagent: true` | n/a (subagent only) |
+  | Shell / write disablement | `commandExecutionPolicy: off` | Allowlist omits `Bash`, `Edit`, `Write` |
+  | Native tools | `tools: [view_file]` | `tools: Read, mcp__grafana` |
+  | Recursive subagents | `enable_subagent_tools: false` | `Agent` omitted from `tools` |
+  | MCP declaration | `mcpServers:` list (`- name: grafana`) with `env` block | `mcpServers:` list of single-key maps (`- grafana:`), launched through `systemd-run --user --pipe` with `RuntimeMaxSec=1h` |
+  | Invocation | `invoke_subagent` | `Agent` tool, `subagent_type: observability` |
+
 - **Query Guardrails**: Relies directly on `mcp-grafana` native server limits (`-max-loki-log-limit 100`, `-loki-guardrail-max-range`, `-loki-guardrail-max-bytes`).
 
 ### 3.7 Linux-Native Environment Prerequisites & Secret Isolation
@@ -120,7 +131,12 @@ Per repository security policy and `OPINIONS.md`, sensitive credentials (such as
      systemctl --user set-environment GRAFANA_URL="https://grafana.leebo.net" GRAFANA_SERVICE_ACCOUNT_TOKEN="glsa_..."
      ```
 3. **Dynamic Harness Expansion**:
-   - Agent harness configurations (`~/.gemini/config/mcp_config.json`) and agent definitions (`agents/observability-agy.md`) dynamically expand `${GRAFANA_URL}` and `${GRAFANA_SERVICE_ACCOUNT_TOKEN}` from the environment at process execution time, preventing any static credential leakage.
+   - Agent harness configurations (`~/.gemini/config/mcp_config.json`) and agent definitions (`agents/agy/observability.md`, `agents/claude/observability.md`) dynamically expand `${GRAFANA_URL}` and `${GRAFANA_SERVICE_ACCOUNT_TOKEN}` from the environment at process execution time, preventing any static credential leakage.
+   - **Antigravity**: agy resolves `${VAR}` in its MCP `env` block from the systemd user environment (`environment.d`) itself, so it works from any terminal.
+   - **Claude Code (verified 2026-09-29)**: Claude Code does not read `environment.d`. It only passes on its own process environment, and WSL terminals do not carry the systemd user environment. Launched from a plain terminal, `mcp-grafana` starts without `GRAFANA_URL`, falls back to `localhost:3000`, stalls on datasource discovery, and Claude's connect times out, leaving the subagent with zero Grafana tools. Agent-frontmatter `env:` blocks with `${VAR}` and the map form of `mcpServers` also fail silently.
+   - **Claude Code resolution**: The Claude definition launches the server as a transient user unit, `systemd-run --user --pipe --quiet --collect mcp-grafana`. The unit inherits the systemd user manager environment, so systemd remains the single source of truth. No shell init, no `home.nix` env, and no token in the `claude` process or its shell. Verified with an empty environment in the launching shell: a live `up` query returned 15 series.
+   - **Unit lifecycle (verified)**: One unit per subagent invocation. The unit starts when the subagent starts and stops when it finishes (about 5 to 7 seconds for a single query); five subagents produced five start/stop cycles with none left over. A hard kill of the `systemd-run` client (`kill -9`) orphans the unit, so `--property=RuntimeMaxSec=1h` caps any stray server at one hour. A subagent that legitimately runs longer than one hour would lose its Grafana tools.
+   - **Model override**: A coordinator may pass a `model` parameter when it invokes the subagent, which overrides the frontmatter `model`. The frontmatter value is a default, not an enforced binding.
 
 ---
 
@@ -136,7 +152,7 @@ Per Section 2 of `OPINIONS.md`, operational know-how lives in skills, not in age
 ### 4.2 Datasource Topology Evolution
 If Grafana datasources are re-provisioned or migrated (changing their UIDs):
 - The authoritative UIDs in Section 3.4 of this specification are updated.
-- The corresponding agent definitions in `agents/observability-agy.md` (and `agents/observability-cc.md`) are updated and fanned out declaratively via `home.nix`.
+- The corresponding agent definitions in `agents/agy/observability.md` and `agents/claude/observability.md` are updated and fanned out declaratively via `home.nix`.
 
 ### 4.3 Incident Feedback Ingestion
 When a post-incident analysis in the homelab surfaces an unindexed label or slow query pattern:
@@ -157,7 +173,7 @@ As homelab services evolve or new applications are onboarded, log formats can dr
 The handoff contract defines the boundary interface between the Primary Coordinator and the Observability Specialist.
 
 ### 5.1 Input Contract (Coordinator -> Specialist)
-The primary coordinator invokes the specialist via `invoke_subagent` using structured parameters:
+The primary coordinator invokes the specialist via `invoke_subagent` (Antigravity) or the `Agent` tool with `subagent_type: observability` (Claude Code) using structured parameters:
 
 ```markdown
 Role: "Observability Specialist"
@@ -272,3 +288,6 @@ Requirements are formalized using Easy Approach to Requirements Syntax (EARS):
 
 - **AC-09 [Event-Driven - Classification Drift Fallback & Pipeline Codification]**:  
   WHEN the coordinator provides `Specific Symptoms` or Prometheus metrics signal service degradation, but the primary OTel query (`| level = "error"`) returns zero matching lines, THEN the specialist agent shall execute a Tier 2 classification drift query (`|~ "(?i)(error|exception|fatal|panic)"`). IF unclassified error logs are discovered, THEN the specialist agent shall analyze the raw log structure and append an `Upstream Knowledge & Skill Feedback` block to its report proposing the exact `config.alloy` OTTL transformation statement required to resolve the misclassification in Alloy's extraction waterfall.
+
+- **AC-10 [Ubiquitous - Multi-Harness Definition Parity & Isolation]**:  
+  The specialist agent shall be defined once per supported harness under `agents/<harness>/observability.md` with an identical prompt body, shall be fanned out declaratively via `home.nix` such that each harness discovers only its own directory, and the Claude Code definition shall expose no write-capable tools (its `tools` allowlist contains only `Read` and `mcp__grafana`).

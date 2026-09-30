@@ -184,7 +184,11 @@ in
 
     # Specialist Agents Fan-out (Antigravity)
     ".gemini/config/agents".source =
-      config.lib.file.mkOutOfStoreSymlink "${dotfiles}/agents";
+      config.lib.file.mkOutOfStoreSymlink "${dotfiles}/agents/agy";
+
+    # Specialist Agents Fan-out (Claude Code)
+    ".claude/agents".source =
+      config.lib.file.mkOutOfStoreSymlink "${dotfiles}/agents/claude";
 
     # Global Hooks Fan-out
     ".gemini/config/hooks.json".source =

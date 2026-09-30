@@ -120,21 +120,21 @@ cd ~/.dotfiles
 | `bin/` | Utility scripts and centralized agent guardrails (`guard-command.sh`) |
 | `hooks.json` | Agent lifecycle hook definitions for command interception |
 | `skills/` | Curated agent skills, fanned out to Antigravity, Kiro, and Claude Code |
-| `agents/` | Specialized subagent definitions organized by harness (`-agy`, `-cc`) |
+| `agents/` | Specialized subagent definitions organized by harness (`agy/`, `claude/`) |
 | `tests/` | Automated test suite (`lib.sh`, `validate.sh`) |
 
 ---
 
 ## Universal AI Agent Layer
 
-Declaratively fanned out via `home.nix` to **Google Antigravity** (`~/.gemini/config/rules/`, `~/.gemini/config/hooks.json`, `~/.gemini/config/agents/`), **AWS Kiro** (`~/.kiro/steering/`), **Claude Code** (`~/.claude/CLAUDE.md`, `~/.claude/skills/<name>/`), and standard fallback paths (`~/.config/`):
+Declaratively fanned out via `home.nix` to **Google Antigravity** (`~/.gemini/config/rules/`, `~/.gemini/config/hooks.json`, `~/.gemini/config/agents/`), **AWS Kiro** (`~/.kiro/steering/`), **Claude Code** (`~/.claude/CLAUDE.md`, `~/.claude/skills/<name>/`, `~/.claude/agents/`), and standard fallback paths (`~/.config/`):
 
 * **`AGENTS.md` (Core Policy)**: Universal formatting rules (zero emojis, zero unicode em dashes, no AI co-author tag pollution), operator autonomy balance, MCP precedence over generic web search, and engineering excellence standards.
 * **`VOICE.md` (Communication Style)**: Writing tone, active voice, short paragraphs, and banned generic AI cliches ("delve", "tapestry", "game-changer", "leverage").
 * **`OPINIONS.md` (Architectural Heuristics)**: Technical preferences (simplicity over speculative abstractions, boring technology, minimal dependencies, mandatory end-to-end bug reproduction, and strict separation of agent execution from governance).
 * **`GITHUB_WORKFLOW.md` (Unified GitHub Standards)**: Lifecycle state machine (`Backlog` -> `In Progress` -> `In Review` -> `Done`), branch standard (`<type>/<short-description>`), writing templates for issues/daily comments/PRs, and scoped PAT security rules across cloud and enterprise instances.
 * **`hooks.json` & `bin/guard-command.sh` (Execution Guardrails)**: Centralized command router enforcing explicit intent handshakes (`AGENT_SKILL=...`) on sensitive commands like `git commit` and `gh issue`. Not yet ported to Claude Code; see `BACKLOG.md`.
-* **`agents/` (Specialized Subagents)**: Modular leaf-node subagent definitions tailored to specific harnesses. Named by harness convention (`*-agy.md` for Google Antigravity, `*-cc.md` for Claude Code) to reflect harness-specific tool and schema features. Fanned out declaratively to `~/.gemini/config/agents/`.
+* **`agents/` (Specialized Subagents)**: Modular leaf-node subagent definitions tailored to specific harnesses. Organized one directory per harness (`agents/agy/` for Google Antigravity, `agents/claude/` for Claude Code) because frontmatter schemas differ (model names, tool allowlists, MCP declaration shape). Each directory is symlinked whole, so a harness never discovers another harness's definitions. Fanned out declaratively to `~/.gemini/config/agents/` and `~/.claude/agents/`.
 * **`skills/` (Domain Runbooks)**: Curated agent skills containing operational runbooks, query standards, and syntax patterns (e.g., `loki`, `promql`, `alloy`).
 
 Claude Code specifics:
@@ -159,7 +159,7 @@ To activate or update credentials immediately in the active user session without
 systemctl --user set-environment GRAFANA_URL="https://grafana.leebo.net" GRAFANA_SERVICE_ACCOUNT_TOKEN="glsa_..."
 ```
 
-Agent harness configurations (e.g., `~/.gemini/config/mcp_config.json`) and subagent definitions (`agents/observability-agy.md`) dynamically expand `${GRAFANA_URL}` and `${GRAFANA_SERVICE_ACCOUNT_TOKEN}` at runtime, keeping credentials isolated to the local host environment.
+Agent harness configurations (e.g., `~/.gemini/config/mcp_config.json`) and subagent definitions (`agents/agy/observability.md`, `agents/claude/observability.md`) dynamically expand `${GRAFANA_URL}` and `${GRAFANA_SERVICE_ACCOUNT_TOKEN}` at runtime, keeping credentials isolated to the local host environment.
 
 
 

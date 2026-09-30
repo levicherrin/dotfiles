@@ -17,7 +17,7 @@ OS="$(uname -s)"
 REAL_USER="$(whoami)"
 
 # Safely prune empty app skeleton directories so Home Manager symlinks can link cleanly without data loss
-for target in "$HOME/.kiro/skills" "$HOME/.gemini/config/skills" "$HOME/.gemini/antigravity-cli/skills" "$HOME/.gemini/config/agents"; do
+for target in "$HOME/.kiro/skills" "$HOME/.gemini/config/skills" "$HOME/.gemini/antigravity-cli/skills" "$HOME/.gemini/config/agents" "$HOME/.claude/agents"; do
   if [ -d "$target" ] && [ ! -L "$target" ]; then
     rmdir "$target" 2>/dev/null || true
   fi
