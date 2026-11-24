@@ -72,3 +72,35 @@ Kiro's IPC architecture is fundamentally different from Antigravity's:
   - [ ] Validate Spotlight indexing and Launch Services registration on fresh rebuilds.
 
 
+
+## Fresh MacBook Setup Findings (2026-11-24)
+Items surfaced while bootstrapping a fresh, MDM-managed work MacBook (Apple Silicon, macOS 26) from `bootstrap.sh`. None blocked the bootstrap; each needs investigation before a fix.
+
+### Surface `chsh` Failures in `bootstrap.sh`
+* **Priority**: Medium
+* **Context**: After `darwin-rebuild switch`, `bootstrap.sh` switches the login shell with `sudo chsh -s "$NIX_BASH" "$REAL_USER" 2>/dev/null || chsh -s "$NIX_BASH" 2>/dev/null || true`. Stderr is discarded and the final `|| true` hides any failure, so the script reports success while the login shell can remain `/bin/zsh`. On the work MacBook the switch succeeded, but the only way to confirm it was `dscl . -read /Users/$USER UserShell`. Managed machines (MDM, directory-bound accounts) are where `chsh` is most likely to fail.
+* **Note**: `users.users.<name>.shell` in `darwin.nix` has no effect here, because nix-darwin only manages shells for users listed in `users.knownUsers`. The `chsh` call is the only mechanism actually switching the shell.
+* **Action Items**:
+  - [ ] Drop the `2>/dev/null` and `|| true` so a failed `chsh` prints its error and fails the bootstrap, or at minimum prints a warning with the manual command.
+  - [ ] Evaluate whether `users.knownUsers` is viable on Macs where the account was not created by nix-darwin; if not, document that `chsh` is the supported path and remove the dead `users.users.<name>.shell` setting.
+
+### Make Linux-Only Shell Aliases Platform-Aware
+* **Priority**: Low
+* **Context**: `home.nix` defines `ports = "sudo ss -tulpn"`, but `ss` is a Linux `iproute2` tool and does not exist on macOS, so the alias fails there. The rest of the shared alias set works on both platforms.
+* **Action Items**:
+  - [ ] Gate `ports` on `isDarwin`: keep `ss` on Linux and use a macOS equivalent such as `sudo lsof -iTCP -sTCP:LISTEN -n -P` on Darwin.
+  - [ ] Audit the remaining aliases and `initExtra` for other Linux-only assumptions.
+
+### Retire or Generalize the `kiro3` Corporate CA Alias
+* **Priority**: Low
+* **Context**: The `kiro3` alias in `home.nix` hardcodes `NODE_EXTRA_CA_CERTS="$HOME/.local/share/certs/mantech-ca-bundle.pem"`, which was added for a previous employer's Netskope TLS inspection (see `CHANGELOG.md`, 2026-08-27). The bundle does not exist on the new work MacBook, and a TLS check against `install.determinate.systems`, `cache.nixos.org`, and `github.com` showed public certificate issuers, so there was no interception at the time of setup.
+* **Action Items**:
+  - [ ] Decide whether `kiro3` is still needed; remove it if Kiro is no longer in use.
+  - [ ] If kept, point it at a machine-agnostic path (for example `$HOME/.local/share/certs/corporate-ca-bundle.pem`) or only set `NODE_EXTRA_CA_CERTS` when the file exists.
+
+### Manage Git Identity Declaratively Per Machine
+* **Priority**: Low
+* **Context**: A fresh machine has no `user.name` or `user.email`, so the first commit from this repo was authored as `lherrin@reslmjr9x2n0wwf.int.seekr.com`, a value git derived from the hostname, and had to be amended. The fix was manual: work email in `~/.gitconfig` (global) and personal email in this repo's `.git/config` (local). The local setting is not tracked and is lost on a fresh clone. GitHub HTTPS auth also had to be set up by hand (`gh auth login`); git uses the `osxkeychain` helper from the Command Line Tools defaults.
+* **Action Items**:
+  - [ ] Evaluate `programs.git` in `home.nix` with `includeIf "gitdir:~/repos/dotfiles/"` (or a personal-repos directory) to apply the personal email automatically, while keeping the work email per machine, out of git.
+  - [ ] Document the fresh-machine GitHub auth step (`gh auth login --git-protocol https --web`) in the README's macOS setup.
