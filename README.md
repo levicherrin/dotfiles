@@ -43,6 +43,25 @@ Once WezTerm is running, right-click its icon in the macOS Dock and select **Opt
 > **VS Code & Kiro IDE Terminal Configuration**:
 > If your editor `settings.json` has a hardcoded path for Bash (such as `"/bin/bash"`), update it to `"path": "bash"` under your terminal profile settings. This ensures the integrated terminal resolves your active Nix Bash environment from `PATH`.
 
+#### Nix and Homebrew Coexistence
+
+Homebrew is optional. When it is installed (`/opt/homebrew`), `darwin.nix` keeps it on `PATH` behind the Nix profiles and ahead of the macOS system paths:
+
+```
+Nix profiles  ->  /opt/homebrew/{bin,sbin}  ->  /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+```
+
+nix-darwin's generated `/etc/bashrc` and `/etc/zshrc` rebuild `PATH` from scratch, which drops the `/etc/paths.d/homebrew` entry. Without the `environment.systemPath` entry, Homebrew tools disappear from every new shell.
+
+The two package managers never overwrite each other's files. When both provide the same command, the first match on `PATH` runs, so a Nix-declared tool always wins over a Homebrew copy. The login shell is pinned by absolute path (`/run/current-system/sw/bin/bash`) and is unaffected by `PATH` order.
+
+Keep one owner per tool and never install the same tool on both sides:
+
+| Owner | Scope | Examples |
+| :---- | :---- | :---- |
+| Nix (`home.nix`, `darwin.nix`) | Personal environment that must match across macOS, WSL2, and Debian, plus anything the dotfiles' own config depends on | `bash`, `starship`, `neovim`, `tmux`, `ripgrep`, `fd`, `fzf`, `jq`, `lazygit`, `gh`, fonts, WezTerm |
+| Homebrew | Machine- or employer-specific tooling, GUI casks, self-updating tools, and per-project language toolchains | `awscli`, `terraform`, `terragrunt`, `kubectl`, `kubelogin`, VS Code, Claude Code, `python`, `uv` |
+
 
 
 ---

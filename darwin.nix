@@ -1,4 +1,4 @@
-{ pkgs, user, ... }:
+{ lib, pkgs, user, ... }:
 
 {
   # Determinate manages the Nix daemon
@@ -10,6 +10,14 @@
   # Enable modern Bash managed by nix-darwin in /etc/shells
   programs.bash.enable = true;
   environment.shells = [ pkgs.bashInteractive ];
+
+  # nix-darwin's /etc/bashrc and /etc/zshrc rebuild PATH from scratch, dropping
+  # the /opt/homebrew/bin entry macOS adds via /etc/paths.d. Re-add Homebrew
+  # after the Nix profiles (default order) and before the macOS system paths
+  # (order 1200): Nix-declared tools win, Homebrew fills gaps, and Homebrew
+  # still shadows stale /usr/bin copies such as python3. Nonexistent entries
+  # are harmless on Macs without Homebrew.
+  environment.systemPath = lib.mkOrder 1100 [ "/opt/homebrew/bin" "/opt/homebrew/sbin" ];
 
   # Install GUI applications and system tools directly via Nix
   environment.systemPackages = [

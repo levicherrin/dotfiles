@@ -1,5 +1,21 @@
 # Changelog & Capabilities History
 
+## [Homebrew PATH Coexistence on macOS] - 2026-11-24
+
+Restored Homebrew tools on `PATH` under nix-darwin and documented which package manager owns which tools.
+
+### What Was Added & Updated
+
+1. **Homebrew on the System PATH (`darwin.nix`)**:
+   * Bootstrapping a fresh work MacBook showed every Homebrew tool (`brew`, `claude`, `uv`, `aws`, `terraform`, `kubectl`) missing from new Bash shells, and `python3` resolving to Apple's `/usr/bin` copy. nix-darwin's generated `/etc/bashrc` and `/etc/zshrc` rebuild `PATH` from scratch and drop the `/etc/paths.d/homebrew` entry that the Homebrew installer relies on.
+   * Added `environment.systemPath = lib.mkOrder 1100 [ "/opt/homebrew/bin" "/opt/homebrew/sbin" ]`. Order 1100 places Homebrew after the Nix profiles (default order) and before the macOS system paths (order 1200), so Nix-declared tools win, Homebrew fills gaps, and Homebrew still shadows stale `/usr/bin` copies.
+   * Chose this over `eval "$(brew shellenv)"` in `home.nix`, which prepends Homebrew ahead of Nix and would let a Homebrew dependency (for example `bash` or `git`) silently shadow the declared version. Trade-off: `HOMEBREW_PREFIX`, `MANPATH`, and `INFOPATH` are no longer exported; `brew` itself does not need them.
+
+2. **Documentation (`README.md`)**:
+   * Added a "Nix and Homebrew Coexistence" section covering `PATH` order, shadowing behavior, and a one-owner-per-tool split between Nix and Homebrew.
+
+---
+
 ## [Claude Code Observability Agent Fan-out] - 2026-09-29
 
 Fanned the `observability` specialist out to Claude Code alongside Antigravity, with one agent directory per harness.
